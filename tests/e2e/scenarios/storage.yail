@@ -12,7 +12,7 @@
   (when (yail-equal? (lexical-value $status) "SignedIn")
     (set-var! g$uid (yail-dictionary-lookup "id" (lexical-value $user) ""))
     ((get-var p$report) (string-append "public " (call-component-method 'SupabaseStorage1 'PublicUrl (*list-for-runtime* ((get-var p$path) "hello.txt")) '(text))))
-    ((get-var p$storage) 'Upload (*list-for-runtime* "asset" ((get-var p$path) "hello.txt") "//hello.txt" "" #f) '(text text text text boolean))))
+    ((get-var p$storage) 'Upload (*list-for-runtime* "asset" ((get-var p$path) "hello.txt") "hello.txt" "" #f) '(text text text text boolean))))
 
 (define-event SupabaseStorage1 Uploaded($tag $path)(set-this-form)
   ((get-var p$report) (string-append "uploaded " (lexical-value $tag)))

@@ -54,9 +54,9 @@ class SupabaseStorage(container: ComponentContainer) : AndroidNonvisibleComponen
         bucket = name.trim()
     }
 
-    @SimpleFunction(description = "Uploads a file to a path in the bucket, such as photos/cat.jpg. File is an " +
-        "App Inventor file: an asset (//name), a picker or camera result, an absolute path, or a path in the " +
-        "app's files. Leave contentType empty to guess it from the name. Uploaded fires when it's done.")
+    @SimpleFunction(description = "Uploads a file to a path in the bucket, such as photos/cat.jpg. File is a " +
+        "media file of the app (cat.jpg), a picker or camera result, an absolute path, or a path in the app's " +
+        "files. Leave contentType empty to guess it from the name. Uploaded fires when it's done.")
     fun Upload(tag: String, path: String, file: String, contentType: String, overwrite: Boolean) =
         requests.launch("Upload", tag) {
             val bytes = withContext(Dispatchers.IO) { files.read(file) }

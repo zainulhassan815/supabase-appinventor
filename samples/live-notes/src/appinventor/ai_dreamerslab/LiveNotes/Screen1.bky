@@ -1212,7 +1212,7 @@
         </value>
         <value name="ARG2">
           <block type="text" id="+[N703%Q$lw;jCY.CIqL">
-            <field name="TEXT">//photo.png</field>
+            <field name="TEXT">photo.png</field>
           </block>
         </value>
         <value name="ARG3">

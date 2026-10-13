@@ -5,6 +5,7 @@ import com.google.appinventor.components.runtime.Form
 import com.google.appinventor.components.runtime.util.FileUtil
 import com.google.appinventor.components.runtime.util.ScopedFile
 import java.io.File
+import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 import java.net.URI
@@ -24,7 +25,14 @@ internal class AppFiles(private val form: Form) {
         path.startsWith("content:") -> checkNotNull(form.contentResolver.openInputStream(Uri.parse(path)))
         path.startsWith("//") -> form.openAsset(path.removePrefix("//"))
         isAbsolute(path) -> absolute(path).inputStream()
+        '/' !in path -> asset(path) ?: FileUtil.openForReading(form, scoped(path))
         else -> FileUtil.openForReading(form, scoped(path))
+    }
+
+    private fun asset(name: String): InputStream? = try {
+        form.openAsset(name)
+    } catch (e: IOException) {
+        null
     }
 
     private fun output(path: String): OutputStream = when {
