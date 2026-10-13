@@ -34,6 +34,14 @@ internal class Requests(
         }
     }
 
+    fun run(operation: String, block: () -> Unit) {
+        try {
+            block()
+        } catch (e: IllegalArgumentException) {
+            fail(operation, "", e)
+        }
+    }
+
     fun fail(operation: String, tag: String, error: Throwable) {
         val code = errorCode(error)
         val message = errorMessage(error)
