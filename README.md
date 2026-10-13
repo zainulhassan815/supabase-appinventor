@@ -153,8 +153,9 @@ a device against a local Supabase. See [Testing](docs/testing.md).
 
 ## License
 
-[GPL-3.0](LICENSE). Apps that include the extension are covered by the GPL too, so if
-you distribute one, share its source under compatible terms.
+[MPL-2.0](LICENSE). Use the extension in any app, free or commercial, and keep your
+app's code to yourself. If you change the extension's own files and distribute them,
+share those changes under the same license.
 
 Built with [Rush](https://github.com/zainulhassan815/rush-cli) on
 [supabase-kt](https://github.com/supabase-community/supabase-kt). Supabase and MIT App
