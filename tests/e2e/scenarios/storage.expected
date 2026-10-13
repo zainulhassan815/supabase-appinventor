@@ -1,0 +1,11 @@
+public http://127\.0\.0\.1:54321/storage/v1/object/public/uploads/[0-9a-f-]+/hello\.txt
+uploaded asset
+files \["hello\.txt"\]
+copied
+moved
+downloaded /storage/emulated/0/Android/data/dev\.dreamerslab\.supabase\.e2e/files/e2e/moved\.txt
+read hello from App Inventor
+uploaded again
+signed http://127\.0\.0\.1:54321/storage/v1/object/sign/uploads/[0-9a-f-]+/roundtrip\.txt\?token=.+
+removed 3
+error forbidden Upload http_400 new row violates row-level security policy

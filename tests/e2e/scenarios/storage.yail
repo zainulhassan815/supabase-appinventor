@@ -1,0 +1,53 @@
+(def g$uid "")
+(def g$downloaded "")
+(def (p$path name) (string-append (get-var g$uid) "/" name))
+(def (p$storage method args types) (call-component-method 'SupabaseStorage1 method args types))
+
+(define-event Screen1 Initialize()(set-this-form)
+  (call-component-method 'Supabase1 'SignUp
+    (*list-for-runtime* (string-append "e2e" (number->string (java.lang.System:currentTimeMillis)) "@example.com") "secret123" (make-yail-dictionary))
+    '(text text dictionary)))
+
+(define-event Supabase1 SessionChanged($status $user)(set-this-form)
+  (when (yail-equal? (lexical-value $status) "SignedIn")
+    (set-var! g$uid (yail-dictionary-lookup "id" (lexical-value $user) ""))
+    ((get-var p$report) (string-append "public " (call-component-method 'SupabaseStorage1 'PublicUrl (*list-for-runtime* ((get-var p$path) "hello.txt")) '(text))))
+    ((get-var p$storage) 'Upload (*list-for-runtime* "asset" ((get-var p$path) "hello.txt") "//hello.txt" "" #f) '(text text text text boolean))))
+
+(define-event SupabaseStorage1 Uploaded($tag $path)(set-this-form)
+  ((get-var p$report) (string-append "uploaded " (lexical-value $tag)))
+  (if (yail-equal? (lexical-value $tag) "asset")
+    ((get-var p$storage) 'ListFiles (*list-for-runtime* "list" (get-var g$uid)) '(text text))
+    ((get-var p$storage) 'SignedUrl (*list-for-runtime* "signed" ((get-var p$path) "roundtrip.txt") 60) '(text text number))))
+
+(define-event SupabaseStorage1 GotFiles($tag $files)(set-this-form)
+  ((get-var p$report) (string-append "files " (coerce-to-string (map (lambda (f) (yail-dictionary-lookup "name" f "")) (yail-list->kawa-list (lexical-value $files))))))
+  ((get-var p$storage) 'Copy (*list-for-runtime* "copy" ((get-var p$path) "hello.txt") ((get-var p$path) "copy.txt")) '(text text text)))
+
+(define-event SupabaseStorage1 Copied($tag $from $to)(set-this-form)
+  ((get-var p$report) "copied")
+  ((get-var p$storage) 'Move (*list-for-runtime* "move" ((get-var p$path) "copy.txt") ((get-var p$path) "moved.txt")) '(text text text)))
+
+(define-event SupabaseStorage1 Moved($tag $from $to)(set-this-form)
+  ((get-var p$report) "moved")
+  ((get-var p$storage) 'Download (*list-for-runtime* "download" ((get-var p$path) "moved.txt") "e2e/moved.txt") '(text text text)))
+
+(define-event SupabaseStorage1 Downloaded($tag $path $file)(set-this-form)
+  (set-var! g$downloaded (lexical-value $file))
+  ((get-var p$report) (string-append "downloaded " (lexical-value $file)))
+  (call-component-method 'File1 'ReadFrom (*list-for-runtime* "e2e/moved.txt") '(text)))
+
+(define-event File1 GotText($text)(set-this-form)
+  ((get-var p$report) (string-append "read " (lexical-value $text)))
+  ((get-var p$storage) 'Upload (*list-for-runtime* "again" ((get-var p$path) "roundtrip.txt") (get-var g$downloaded) "text/plain" #f) '(text text text text boolean)))
+
+(define-event SupabaseStorage1 GotSignedUrl($tag $path $url)(set-this-form)
+  ((get-var p$report) (string-append "signed " (lexical-value $url)))
+  ((get-var p$storage) 'Remove (*list-for-runtime* "remove" (make-yail-list ((get-var p$path) "hello.txt") ((get-var p$path) "moved.txt") ((get-var p$path) "roundtrip.txt"))) '(text list)))
+
+(define-event SupabaseStorage1 Removed($tag $paths)(set-this-form)
+  ((get-var p$report) (string-append "removed " (number->string (yail-list-length (lexical-value $paths)))))
+  ((get-var p$storage) 'Upload (*list-for-runtime* "forbidden" "someone-else/x.txt" "//hello.txt" "" #f) '(text text text text boolean)))
+
+(define-event SupabaseStorage1 Error($tag $operation $code $message)(set-this-form)
+  ((get-var p$report) (string-append "error " (lexical-value $tag) " " (lexical-value $operation) " " (lexical-value $code) " " (lexical-value $message))))

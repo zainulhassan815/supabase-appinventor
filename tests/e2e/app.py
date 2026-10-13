@@ -1,19 +1,25 @@
 #!/usr/bin/env python3
 import json
 import os
+import shutil
 import sys
 import zipfile
 
 USAGE = 'usage: app.py <project-dir> <aix> <scenario.yail> <project-url> <publishable-key>'
 PACKAGE = 'dev.dreamerslab.supabase.e2e.Screen1'
 EXTENSION = 'dev.dreamerslab.supabase'
+RUNTIME = 'com.google.appinventor.components.runtime'
+BUILT_IN_VERSIONS = {'Label': '6', 'File': '4'}
+ASSETS = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'assets')
 
 
 def components(url, key):
     return [
         ('Supabase', f'{EXTENSION}.Supabase', {'ProjectUrl': url, 'PublishableKey': key}),
         ('SupabaseDatabase', f'{EXTENSION}.SupabaseDatabase', {'Client': 'Supabase1'}),
-        ('Label', 'com.google.appinventor.components.runtime.Label', {'Text': ''}),
+        ('SupabaseStorage', f'{EXTENSION}.SupabaseStorage', {'Client': 'Supabase1', 'Bucket': 'uploads'}),
+        ('File', f'{RUNTIME}.File', {}),
+        ('Label', f'{RUNTIME}.Label', {'Text': ''}),
     ]
 
 
@@ -33,7 +39,7 @@ def form_json(instances, versions):
             '$Name': 'Screen1', '$Type': 'Form', '$Version': '32',
             'AppName': 'SupabaseE2E', 'Title': 'Supabase E2E', 'Uuid': '0',
             '$Components': [{
-                '$Name': f'{name}1', '$Type': name, '$Version': versions.get(name, '6'), 'Uuid': str(i + 1),
+                '$Name': f'{name}1', '$Type': name, '$Version': versions.get(name) or BUILT_IN_VERSIONS[name], 'Uuid': str(i + 1),
                 **properties,
             } for i, (name, _, properties) in enumerate(instances)],
         },
@@ -70,6 +76,8 @@ $Source $Yail
 def main(project, aix, scenario, url, key):
     instances = components(url, key)
     found = versions(aix, os.path.join(project, 'assets', 'external_comps'))
+    for asset in os.listdir(ASSETS):
+        shutil.copy(os.path.join(ASSETS, asset), os.path.join(project, 'assets', asset))
     source = os.path.join(project, 'src', *PACKAGE.split('.')[:-1])
     os.makedirs(source, exist_ok=True)
     os.makedirs(os.path.join(project, 'youngandroidproject'), exist_ok=True)
