@@ -1,0 +1,9 @@
+[
+  {"name": "Supabase1", "type": "Supabase", "properties": {"ProjectUrl": "{{url}}", "PublishableKey": "{{key}}"}},
+  {"name": "SupabaseDatabase1", "type": "SupabaseDatabase", "properties": {"Client": "@Supabase1"}},
+  {"name": "SupabaseStorage1", "type": "SupabaseStorage", "properties": {"Client": "@Supabase1", "Bucket": "uploads"}},
+  {"name": "SupabaseChannel1", "type": "SupabaseChannel", "properties": {"Client": "@Supabase1", "Topic": "e2e", "PresenceKey": "tester"}},
+  {"name": "SupabaseFunctions1", "type": "SupabaseFunctions", "properties": {"Client": "@Supabase1"}},
+  {"name": "File1", "type": "File"},
+  {"name": "Label1", "type": "Label", "properties": {"Text": ""}}
+]

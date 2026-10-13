@@ -5,60 +5,78 @@ import shutil
 import sys
 import zipfile
 
-USAGE = 'usage: app.py <project-dir> <aix> <scenario.yail> <project-url> <publishable-key>'
+USAGE = 'usage: app.py <project-dir> <aix> <form.json> <screen.yail> <project-url> <publishable-key>'
 PACKAGE = 'dev.dreamerslab.supabase.e2e.Screen1'
-EXTENSION = 'dev.dreamerslab.supabase'
 RUNTIME = 'com.google.appinventor.components.runtime'
-BUILT_IN_VERSIONS = {'Label': '6', 'File': '4'}
+BUILT_IN_VERSIONS = {
+    'Button': '8', 'File': '4', 'HorizontalArrangement': '4', 'Image': '8', 'Label': '6', 'ListView': '11',
+    'PasswordTextBox': '8', 'TextBox': '15', 'VerticalArrangement': '4',
+}
 ASSETS = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'assets')
 
 
-def components(url, key):
-    return [
-        ('Supabase', f'{EXTENSION}.Supabase', {'ProjectUrl': url, 'PublishableKey': key}),
-        ('SupabaseDatabase', f'{EXTENSION}.SupabaseDatabase', {'Client': 'Supabase1'}),
-        ('SupabaseStorage', f'{EXTENSION}.SupabaseStorage', {'Client': 'Supabase1', 'Bucket': 'uploads'}),
-        ('SupabaseChannel', f'{EXTENSION}.SupabaseChannel', {'Client': 'Supabase1', 'Topic': 'e2e', 'PresenceKey': 'tester'}),
-        ('SupabaseFunctions', f'{EXTENSION}.SupabaseFunctions', {'Client': 'Supabase1'}),
-        ('File', f'{RUNTIME}.File', {}),
-        ('Label', f'{RUNTIME}.Label', {'Text': ''}),
-    ]
-
-
-def versions(aix, target):
+def extension_components(aix, target):
     with zipfile.ZipFile(aix) as zf:
         zf.extractall(target)
         descriptor = next(name for name in zf.namelist() if name.endswith('/components.json'))
-        return {c['name']: c['version'] for c in json.loads(zf.read(descriptor))}
+        return {c['name']: c for c in json.loads(zf.read(descriptor))}
 
 
-def form_json(instances, versions):
+def resolve(value, settings):
+    return settings.get(value[2:-2], value) if isinstance(value, str) and value.startswith('{{') else value
+
+
+def walk(components, container='Screen1'):
+    for component in components:
+        yield container, component
+        yield from walk(component.get('children', []), component['name'])
+
+
+def designer_value(value):
+    if isinstance(value, bool):
+        return 'True' if value else 'False'
+    if isinstance(value, str) and value.startswith('@'):
+        return value[1:]
+    return str(value)
+
+
+def yail_value(value):
+    if isinstance(value, bool):
+        return ('#t' if value else '#f'), 'boolean'
+    if isinstance(value, (int, float)):
+        return str(value), 'number'
+    if value.startswith('@'):
+        return f'(get-component {value[1:]})', 'component'
+    return json.dumps(value), 'text'
+
+
+def scm(components, extensions, uuids):
+    def instance(component):
+        name, type_name = component['name'], component['type']
+        version = extensions[type_name]['version'] if type_name in extensions else BUILT_IN_VERSIONS[type_name]
+        return {
+            '$Name': name, '$Type': type_name, '$Version': str(version), 'Uuid': str(next(uuids)),
+            **{key: designer_value(value) for key, value in component.get('properties', {}).items()},
+            **({'$Components': [instance(c) for c in component['children']]} if component.get('children') else {}),
+        }
     return {
-        'authURL': ['ai2.appinventor.mit.edu'],
-        'YaVersion': '237',
-        'Source': 'Form',
+        'authURL': ['ai2.appinventor.mit.edu'], 'YaVersion': '237', 'Source': 'Form',
         'Properties': {
-            '$Name': 'Screen1', '$Type': 'Form', '$Version': '32',
-            'AppName': 'SupabaseE2E', 'Title': 'Supabase E2E', 'Uuid': '0',
-            '$Components': [{
-                '$Name': f'{name}1', '$Type': name, '$Version': versions.get(name) or BUILT_IN_VERSIONS[name], 'Uuid': str(i + 1),
-                **properties,
-            } for i, (name, _, properties) in enumerate(instances)],
+            '$Name': 'Screen1', '$Type': 'Form', '$Version': '32', 'AppName': 'SupabaseE2E',
+            'Title': 'Supabase', 'Uuid': '0', '$Components': [instance(c) for c in components],
         },
     }
 
 
-def property_yail(component, name, value):
-    if name == 'Client':
-        return f"(set-and-coerce-property! '{component} '{name} (get-component {value}) 'component)"
-    return f"(set-and-coerce-property! '{component} '{name} {json.dumps(value)} 'text)"
-
-
-def yail(instances, scenario):
-    adds = '\n'.join(
-        f'(add-component Screen1 {type_name} {name}1 '
-        + ' '.join(property_yail(f'{name}1', key, value) for key, value in properties.items()) + ')'
-        for name, type_name, properties in instances)
+def yail(components, extensions, screen):
+    def add(container, component):
+        name, type_name = component['name'], component['type']
+        full_type = extensions[type_name]['type'] if type_name in extensions else f'{RUNTIME}.{type_name}'
+        properties = ' '.join(
+            f"(set-and-coerce-property! '{name} '{key} {literal} '{kind})"
+            for key, (literal, kind) in ((k, yail_value(v)) for k, v in component.get('properties', {}).items()))
+        return f'(add-component {container} {full_type} {name} {properties})'
+    adds = '\n'.join(add(container, component) for container, component in walk(components))
     return f'''#|
 $Source $Yail
 |#
@@ -67,17 +85,16 @@ $Source $Yail
 (require <com.google.youngandroid.runtime>)
 (do-after-form-creation (set-and-coerce-property! 'Screen1 'AppName "SupabaseE2E" 'text))
 {adds}
-(def (p$report line)
-  (set-and-coerce-property! 'Label1 'Text
-    (string-append (coerce-to-string (get-property 'Label1 'Text)) (coerce-to-string line) "\\n") 'text))
-{scenario}
+{screen}
 (init-runtime)
 '''
 
 
-def main(project, aix, scenario, url, key):
-    instances = components(url, key)
-    found = versions(aix, os.path.join(project, 'assets', 'external_comps'))
+def main(project, aix, form, screen, url, key):
+    settings = {'url': url, 'key': key}
+    with open(form) as f:
+        components = json.load(f, object_hook=lambda o: {k: resolve(v, settings) for k, v in o.items()})
+    extensions = extension_components(aix, os.path.join(project, 'assets', 'external_comps'))
     for asset in os.listdir(ASSETS):
         shutil.copy(os.path.join(ASSETS, asset), os.path.join(project, 'assets', asset))
     source = os.path.join(project, 'src', *PACKAGE.split('.')[:-1])
@@ -88,14 +105,14 @@ def main(project, aix, scenario, url, key):
                 'versioncode=1\nversionname=1.0\nuseslocation=False\naname=SupabaseE2E\nsizing=Responsive\n'
                 'showlistsasjson=True\ntheme=AppTheme.Light.DarkActionBar\n')
     with open(os.path.join(source, 'Screen1.scm'), 'w') as f:
-        f.write(f'#|\n$JSON\n{json.dumps(form_json(instances, found))}\n|#\n')
+        f.write(f'#|\n$JSON\n{json.dumps(scm(components, extensions, iter(range(1, 1000))))}\n|#\n')
     with open(os.path.join(source, 'Screen1.bky'), 'w') as f:
         f.write('<xml xmlns="http://www.w3.org/1999/xhtml"></xml>\n')
-    with open(scenario) as f, open(os.path.join(source, 'Screen1.yail'), 'w') as out:
-        out.write(yail(instances, f.read()))
+    with open(screen) as f, open(os.path.join(source, 'Screen1.yail'), 'w') as out:
+        out.write(yail(components, extensions, f.read()))
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 6:
+    if len(sys.argv) != 7:
         sys.exit(USAGE)
     main(*sys.argv[1:])
