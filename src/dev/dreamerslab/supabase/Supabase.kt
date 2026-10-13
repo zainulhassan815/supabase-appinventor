@@ -10,6 +10,7 @@ import com.google.appinventor.components.annotations.SimpleFunction
 import com.google.appinventor.components.annotations.SimpleProperty
 import com.google.appinventor.components.common.PropertyTypeConstants
 import com.google.appinventor.components.runtime.AndroidNonvisibleComponent
+import com.google.appinventor.components.runtime.Component
 import com.google.appinventor.components.runtime.ComponentContainer
 import com.google.appinventor.components.runtime.EventDispatcher
 import com.google.appinventor.components.runtime.OnDestroyListener
@@ -39,7 +40,7 @@ import io.github.jan.supabase.auth.status.SessionStatus as AuthStatus
         "Other Supabase components use it through their Client property.",
     icon = "icon.png",
 )
-class Supabase(container: ComponentContainer) : AndroidNonvisibleComponent(container.`$form`()), OnDestroyListener {
+class Supabase(container: ComponentContainer) : AndroidNonvisibleComponent(container.`$form`()), Component, OnDestroyListener {
 
     private val requests = Requests(form, this) { operation, _, code, message -> reportError(operation, code, message) }
     private var projectUrl = ""

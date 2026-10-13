@@ -5,6 +5,7 @@ import com.google.appinventor.components.runtime.Form
 import com.google.appinventor.components.runtime.util.ErrorMessages
 import io.github.jan.supabase.exceptions.HttpRequestException
 import io.github.jan.supabase.exceptions.RestException
+import io.github.jan.supabase.postgrest.exception.PostgrestRestException
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -43,6 +44,7 @@ internal class Requests(
     fun close() = scope.cancel()
 
     private fun errorCode(error: Throwable) = when (error) {
+        is PostgrestRestException -> error.code ?: error.error
         is RestException -> error.error
         is HttpRequestException -> "network"
         is IllegalArgumentException -> "invalid_argument"
@@ -50,6 +52,7 @@ internal class Requests(
     }
 
     private fun errorMessage(error: Throwable) = when (error) {
+        is PostgrestRestException -> listOfNotNull(error.error, error.hint).joinToString(". ")
         is RestException -> error.description ?: error.error
         is HttpRequestException -> "Couldn't reach Supabase: ${error.cause?.message ?: error.message}"
         else -> error.message ?: error.toString()

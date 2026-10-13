@@ -33,3 +33,7 @@
 -dontwarn org.openjsse.**
 -dontwarn com.oracle.svm.core.annotate.**
 -dontwarn org.graalvm.nativeimage.**
+
+-keepclassmembers class **$Companion {
+    kotlinx.serialization.KSerializer serializer(...);
+}
