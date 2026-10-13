@@ -18,6 +18,7 @@ def components(url, key):
         ('Supabase', f'{EXTENSION}.Supabase', {'ProjectUrl': url, 'PublishableKey': key}),
         ('SupabaseDatabase', f'{EXTENSION}.SupabaseDatabase', {'Client': 'Supabase1'}),
         ('SupabaseStorage', f'{EXTENSION}.SupabaseStorage', {'Client': 'Supabase1', 'Bucket': 'uploads'}),
+        ('SupabaseChannel', f'{EXTENSION}.SupabaseChannel', {'Client': 'Supabase1', 'Topic': 'e2e', 'PresenceKey': 'tester'}),
         ('File', f'{RUNTIME}.File', {}),
         ('Label', f'{RUNTIME}.Label', {'Text': ''}),
     ]

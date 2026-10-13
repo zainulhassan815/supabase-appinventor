@@ -1,0 +1,11 @@
+!unordered
+status Subscribing
+status Subscribed
+presence joins \["tester"\] leaves \[\]
+broadcast ping \{"n":1\}
+insert 2
+change notes INSERT realtime
+delete 1
+change notes DELETE old \["id"\]
+presence joins \[\] leaves \["tester"\]
+status Unsubscribed

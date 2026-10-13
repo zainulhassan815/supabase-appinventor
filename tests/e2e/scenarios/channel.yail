@@ -1,0 +1,54 @@
+(def (p$filter column operator value)
+  (call-component-method 'SupabaseDatabase1 'Filter (*list-for-runtime* column operator value) '(text text any)))
+(def (p$keys dictionary) (coerce-to-string (yail-dictionary-get-keys dictionary)))
+
+(define-event Screen1 Initialize()(set-this-form)
+  (call-component-method 'Supabase1 'SignUp
+    (*list-for-runtime* (string-append "e2e" (number->string (java.lang.System:currentTimeMillis)) "@example.com") "secret123" (make-yail-dictionary))
+    '(text text dictionary)))
+
+(define-event Supabase1 SessionChanged($status $user)(set-this-form)
+  (when (yail-equal? (lexical-value $status) "SignedIn")
+    (call-component-method 'SupabaseChannel1 'ListenToTable
+      (*list-for-runtime* "public" "notes" "INSERT" ((get-var p$filter) "body" "eq" "realtime")) '(text text text any))
+    (call-component-method 'SupabaseChannel1 'ListenToTable
+      (*list-for-runtime* "public" "notes" "DELETE" "") '(text text text any))
+    (call-component-method 'SupabaseChannel1 'ListenToBroadcast (*list-for-runtime* "ping") '(text))
+    (call-component-method 'SupabaseChannel1 'Subscribe (*list-for-runtime*) '())))
+
+(define-event SupabaseChannel1 StatusChanged($status)(set-this-form)
+  ((get-var p$report) (string-append "status " (coerce-to-string (lexical-value $status))))
+  (when (yail-equal? (lexical-value $status) "Subscribed")
+    (call-component-method 'SupabaseChannel1 'Track (*list-for-runtime* (make-yail-dictionary (make-dictionary-pair "status" "online"))) '(dictionary))
+    (call-component-method 'SupabaseChannel1 'Broadcast (*list-for-runtime* "ping" (make-yail-dictionary (make-dictionary-pair "n" 1))) '(text dictionary))
+    (call-component-method 'SupabaseDatabase1 'Insert
+      (*list-for-runtime* "insert" "notes" (make-yail-list (make-yail-dictionary (make-dictionary-pair "body" "realtime")) (make-yail-dictionary (make-dictionary-pair "body" "other"))))
+      '(text text any))))
+
+(define-event SupabaseChannel1 BroadcastReceived($event $payload)(set-this-form)
+  ((get-var p$report) (string-append "broadcast " (lexical-value $event) " " (coerce-to-string (lexical-value $payload)))))
+
+(define-event SupabaseChannel1 PresenceChanged($joins $leaves)(set-this-form)
+  (unless (and (= 0 (yail-dictionary-length (lexical-value $joins))) (= 0 (yail-dictionary-length (lexical-value $leaves))))
+    ((get-var p$report) (string-append "presence joins " ((get-var p$keys) (lexical-value $joins)) " leaves " ((get-var p$keys) (lexical-value $leaves))))
+    (when (> (yail-dictionary-length (lexical-value $leaves)) 0)
+      (call-component-method 'SupabaseChannel1 'Unsubscribe (*list-for-runtime*) '()))))
+
+(define-event SupabaseDatabase1 GotRows($tag $rows)(set-this-form)
+  ((get-var p$report) (string-append (lexical-value $tag) " " (number->string (yail-list-length (lexical-value $rows))))))
+
+(define-event SupabaseChannel1 ChangeReceived($table $event $record $oldRecord)(set-this-form)
+  (if (yail-equal? (lexical-value $event) "INSERT")
+    (begin
+      ((get-var p$report) (string-append "change " (lexical-value $table) " INSERT " (yail-dictionary-lookup "body" (lexical-value $record) "")))
+      (call-component-method 'SupabaseDatabase1 'Delete
+        (*list-for-runtime* "delete" "notes" (make-yail-list ((get-var p$filter) "id" "eq" (yail-dictionary-lookup "id" (lexical-value $record) 0))))
+        '(text text list)))
+    (begin
+      ((get-var p$report) (string-append "change " (lexical-value $table) " " (coerce-to-string (lexical-value $event)) " old " ((get-var p$keys) (lexical-value $oldRecord))))
+      (call-component-method 'SupabaseChannel1 'Untrack (*list-for-runtime*) '()))))
+
+(define-event SupabaseChannel1 Error($operation $code $message)(set-this-form)
+  ((get-var p$report) (string-append "error " (lexical-value $operation) " " (lexical-value $code) " " (lexical-value $message))))
+(define-event SupabaseDatabase1 Error($tag $operation $code $message)(set-this-form)
+  ((get-var p$report) (string-append "error " (lexical-value $operation) " " (lexical-value $code) " " (lexical-value $message))))
