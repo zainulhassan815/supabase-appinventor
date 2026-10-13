@@ -1,7 +1,5 @@
 package dev.dreamerslab.supabase
 
-import android.os.Handler
-import android.os.Looper
 import com.google.appinventor.components.annotations.DesignerProperty
 import com.google.appinventor.components.annotations.Options
 import com.google.appinventor.components.annotations.Extension
@@ -14,6 +12,7 @@ import com.google.appinventor.components.runtime.Component
 import com.google.appinventor.components.runtime.ComponentContainer
 import com.google.appinventor.components.runtime.EventDispatcher
 import com.google.appinventor.components.runtime.OnDestroyListener
+import com.google.appinventor.components.runtime.util.OnInitializeListener
 import com.google.appinventor.components.runtime.util.YailDictionary
 import dev.dreamerslab.supabase.helpers.SessionStatus
 import io.github.jan.supabase.SupabaseClient
@@ -40,7 +39,7 @@ import io.github.jan.supabase.auth.status.SessionStatus as AuthStatus
         "Other Supabase components use it through their Client property.",
     icon = "icon.png",
 )
-class Supabase(container: ComponentContainer) : AndroidNonvisibleComponent(container.`$form`()), Component, OnDestroyListener {
+class Supabase(container: ComponentContainer) : AndroidNonvisibleComponent(container.`$form`()), Component, OnInitializeListener, OnDestroyListener {
 
     private val requests = Requests(form, this) { operation, _, code, message -> reportError(operation, code, message) }
     private var projectUrl = ""
@@ -48,8 +47,8 @@ class Supabase(container: ComponentContainer) : AndroidNonvisibleComponent(conta
     private var connection: SupabaseClient? = null
 
     init {
+        form.registerForOnInitialize(this)
         form.registerForOnDestroy(this)
-        Handler(Looper.getMainLooper()).post(::restoreSession)
     }
 
     internal val client: SupabaseClient
@@ -130,6 +129,8 @@ class Supabase(container: ComponentContainer) : AndroidNonvisibleComponent(conta
     fun Error(operation: String, code: String, message: String) {
         reportError(operation, code, message)
     }
+
+    override fun onInitialize() = restoreSession()
 
     override fun onDestroy() {
         disconnect()
