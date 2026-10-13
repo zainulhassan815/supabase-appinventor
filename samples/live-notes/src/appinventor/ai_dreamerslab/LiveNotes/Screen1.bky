@@ -1,0 +1,1442 @@
+<xml xmlns="https://developers.google.com/blockly/xml">
+  <block type="global_declaration" id="%Hhk:{bCJNPL5m.xGk$#" x="0" y="0">
+    <field name="NAME">email</field>
+    <value name="VALUE">
+      <block type="text" id="Wl#D1m2tE6bZ}EUjL)vg">
+        <field name="TEXT"></field>
+      </block>
+    </value>
+  </block>
+  <block type="global_declaration" id="KG#I;5,$Q8!dG5KUx{84" x="0" y="51">
+    <field name="NAME">subscribed</field>
+    <value name="VALUE">
+      <block type="logic_boolean" id="ZQ1El-U;2VKo!)2oeh9,">
+        <field name="BOOL">FALSE</field>
+      </block>
+    </value>
+  </block>
+  <block type="global_declaration" id="AF6#G~Uam?z2fOz~CHsP" x="0" y="102">
+    <field name="NAME">listening</field>
+    <value name="VALUE">
+      <block type="logic_boolean" id="TR[d#UVj!EaUY0Tt2^xO">
+        <field name="BOOL">FALSE</field>
+      </block>
+    </value>
+  </block>
+  <block type="global_declaration" id="yz|A-yJtMa71`~,.+!;," x="0" y="153">
+    <field name="NAME">notes</field>
+    <value name="VALUE">
+      <block type="lists_create_with" id="I!Yb-DH[Lw+pt*fvR$sz">
+        <mutation xmlns="http://www.w3.org/1999/xhtml" items="0"></mutation>
+      </block>
+    </value>
+  </block>
+  <block type="global_declaration" id="#[fjHF9mpKH7+${ls==B" x="0" y="204">
+    <field name="NAME">online</field>
+    <value name="VALUE">
+      <block type="dictionaries_create_with" id="QY!G](.~2owIZSi[!G2?">
+        <mutation xmlns="http://www.w3.org/1999/xhtml" items="0"></mutation>
+      </block>
+    </value>
+  </block>
+  <block type="procedures_defnoreturn" id=":Dq[lIh%oGvy@Pvy(!qn" x="0" y="255">
+    <mutation xmlns="http://www.w3.org/1999/xhtml">
+      <arg name="message"></arg>
+    </mutation>
+    <field name="NAME">show</field>
+    <field name="VAR0">message</field>
+    <statement name="STACK">
+      <block type="component_set_get" id="G)FL@1V0/UyZ}64-4Pju">
+        <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="Label" set_or_get="set" property_name="Text" is_generic="false" instance_name="InfoLabel"></mutation>
+        <field name="COMPONENT_SELECTOR">InfoLabel</field>
+        <field name="PROP">Text</field>
+        <value name="VALUE">
+          <block type="lexical_variable_get" id="Fxc_RqV1w|^=7q!ICu{-">
+            <field name="VAR">message</field>
+          </block>
+        </value>
+      </block>
+    </statement>
+  </block>
+  <block type="procedures_defnoreturn" id="A1-/4_=ol/NRPqWApZ6/" x="0" y="346">
+    <field name="NAME">loadNotes</field>
+    <statement name="STACK">
+      <block type="component_method" id="9hx*IkKh.wpVeq9iO(XA">
+        <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="SupabaseDatabase" method_name="Select" is_generic="false" instance_name="Notes"></mutation>
+        <field name="COMPONENT_SELECTOR">Notes</field>
+        <value name="ARG0">
+          <block type="text" id="m7jvPbdu}#FwzRX+A$[m">
+            <field name="TEXT">load</field>
+          </block>
+        </value>
+        <value name="ARG1">
+          <block type="text" id="QqbUD:KGyK_*jaoffM$L">
+            <field name="TEXT">notes</field>
+          </block>
+        </value>
+        <value name="ARG2">
+          <block type="text" id="v%Vp#CS7Yrrz/:Cd[El%">
+            <field name="TEXT">id,body</field>
+          </block>
+        </value>
+        <value name="ARG3">
+          <block type="lists_create_with" id="Ss+m%e.MTj6R`qEM)l|U">
+            <mutation xmlns="http://www.w3.org/1999/xhtml" items="0"></mutation>
+          </block>
+        </value>
+        <value name="ARG4">
+          <block type="text" id="r6QX^zl%/dMUB:c3GXK0">
+            <field name="TEXT">id</field>
+          </block>
+        </value>
+        <value name="ARG5">
+          <block type="logic_boolean" id="Cz^Ad%i#iQb9z%21%mJK">
+            <field name="BOOL">TRUE</field>
+          </block>
+        </value>
+        <value name="ARG6">
+          <block type="math_number" id="EmkOw|jm8Fyha1$r*v*1">
+            <field name="NUM">0</field>
+          </block>
+        </value>
+        <value name="ARG7">
+          <block type="math_number" id="e6~KsmfCK:(RxaHx=F?^">
+            <field name="NUM">0</field>
+          </block>
+        </value>
+      </block>
+    </statement>
+  </block>
+  <block type="procedures_defnoreturn" id="c[o+5!mFNU_j=fWGM]Y_" x="0" y="653">
+    <field name="NAME">showOnline</field>
+    <statement name="STACK">
+      <block type="component_set_get" id="c^!{V1~h7j(X|=$ig*$r">
+        <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="Label" set_or_get="set" property_name="Text" is_generic="false" instance_name="OnlineLabel"></mutation>
+        <field name="COMPONENT_SELECTOR">OnlineLabel</field>
+        <field name="PROP">Text</field>
+        <value name="VALUE">
+          <block type="text_join" id="r2`752U2^fBx=fVz$o+C">
+            <mutation xmlns="http://www.w3.org/1999/xhtml" items="2"></mutation>
+            <value name="ADD0">
+              <block type="dictionaries_length" id="*:@GuC0n0CE{]r_z[uP$">
+                <value name="DICT">
+                  <block type="lexical_variable_get" id="H4=47mR?yKXOmogK6!K(">
+                    <field name="VAR">global online</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <value name="ADD1">
+              <block type="text" id="IuaIsoAaL;t(8MG+%Gm!">
+                <field name="TEXT"> online</field>
+              </block>
+            </value>
+          </block>
+        </value>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="Itxy@oE8j2d5t3juWYZf" x="0" y="771">
+    <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="Button" is_generic="false" instance_name="SignUpButton" event_name="Click"></mutation>
+    <field name="COMPONENT_SELECTOR">SignUpButton</field>
+    <statement name="DO">
+      <block type="component_method" id="fR?3--0Vjg^.u;[MpKso">
+        <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="Supabase" method_name="SignUp" is_generic="false" instance_name="Supabase1"></mutation>
+        <field name="COMPONENT_SELECTOR">Supabase1</field>
+        <value name="ARG0">
+          <block type="component_set_get" id="ffxuo:dbHd:YmL.$g(|2">
+            <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="TextBox" set_or_get="get" property_name="Text" is_generic="false" instance_name="EmailBox"></mutation>
+            <field name="COMPONENT_SELECTOR">EmailBox</field>
+            <field name="PROP">Text</field>
+          </block>
+        </value>
+        <value name="ARG1">
+          <block type="component_set_get" id="P`(|lv*F*@c/v5R(W,G+">
+            <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="PasswordTextBox" set_or_get="get" property_name="Text" is_generic="false" instance_name="PasswordBox"></mutation>
+            <field name="COMPONENT_SELECTOR">PasswordBox</field>
+            <field name="PROP">Text</field>
+          </block>
+        </value>
+        <value name="ARG2">
+          <block type="dictionaries_create_with" id="Z^dx1K+*-c=-rk9o#q-}">
+            <mutation xmlns="http://www.w3.org/1999/xhtml" items="0"></mutation>
+          </block>
+        </value>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="k`*`~u58$s,*j#PkRRDE" x="0" y="943">
+    <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="Button" is_generic="false" instance_name="SignInButton" event_name="Click"></mutation>
+    <field name="COMPONENT_SELECTOR">SignInButton</field>
+    <statement name="DO">
+      <block type="component_method" id="2X6GKt]mSAH$dBbTCyO*">
+        <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="Supabase" method_name="SignIn" is_generic="false" instance_name="Supabase1"></mutation>
+        <field name="COMPONENT_SELECTOR">Supabase1</field>
+        <value name="ARG0">
+          <block type="component_set_get" id="JeIb7uWN`q?c?9p:e=*v">
+            <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="TextBox" set_or_get="get" property_name="Text" is_generic="false" instance_name="EmailBox"></mutation>
+            <field name="COMPONENT_SELECTOR">EmailBox</field>
+            <field name="PROP">Text</field>
+          </block>
+        </value>
+        <value name="ARG1">
+          <block type="component_set_get" id="5AEPNik#wKnI=Mk[B4B}">
+            <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="PasswordTextBox" set_or_get="get" property_name="Text" is_generic="false" instance_name="PasswordBox"></mutation>
+            <field name="COMPONENT_SELECTOR">PasswordBox</field>
+            <field name="PROP">Text</field>
+          </block>
+        </value>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="f@|TYiQdV-op9J2p?qLp" x="0" y="1088">
+    <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="Button" is_generic="false" instance_name="SignOutButton" event_name="Click"></mutation>
+    <field name="COMPONENT_SELECTOR">SignOutButton</field>
+    <statement name="DO">
+      <block type="component_method" id="V@0#y~J)?}kw;jL_7Z9j">
+        <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="Supabase" method_name="SignOut" is_generic="false" instance_name="Supabase1"></mutation>
+        <field name="COMPONENT_SELECTOR">Supabase1</field>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="VD;qBkb|L;4{l1U?k6kT" x="0" y="1179">
+    <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="Supabase" is_generic="false" instance_name="Supabase1" event_name="SessionChanged"></mutation>
+    <field name="COMPONENT_SELECTOR">Supabase1</field>
+    <statement name="DO">
+      <block type="controls_if" id="o(zk:5.-|5oq0_j*R4Co">
+        <mutation xmlns="http://www.w3.org/1999/xhtml" else="1"></mutation>
+        <value name="IF0">
+          <block type="logic_compare" id="Sd`7R6~+xsXW3r`hmomA">
+            <field name="OP">EQ</field>
+            <value name="A">
+              <block type="lexical_variable_get" id="y#IeIQ%a}w$Na()iu!!b">
+                <mutation xmlns="http://www.w3.org/1999/xhtml">
+                  <eventparam name="status"></eventparam>
+                </mutation>
+                <field name="VAR">status</field>
+              </block>
+            </value>
+            <value name="B">
+              <block type="helpers_dropdown" id="{gJYd;m|abE?eznl%kZ@">
+                <mutation xmlns="http://www.w3.org/1999/xhtml" key="SessionStatus"></mutation>
+                <field name="OPTION">SignedIn</field>
+              </block>
+            </value>
+          </block>
+        </value>
+        <statement name="DO0">
+          <block type="lexical_variable_set" id="G};9-bd8;`Zaa.R~EEdM">
+            <field name="VAR">global email</field>
+            <value name="VALUE">
+              <block type="dictionaries_lookup" id="i^$)[oifkU187!H|dj!f">
+                <value name="KEY">
+                  <block type="text" id="b9oQBj@ZKYqdyVT(mXMP">
+                    <field name="TEXT">email</field>
+                  </block>
+                </value>
+                <value name="DICT">
+                  <block type="lexical_variable_get" id="EdPWn56frA!?eq;1Otls">
+                    <mutation xmlns="http://www.w3.org/1999/xhtml">
+                      <eventparam name="user"></eventparam>
+                    </mutation>
+                    <field name="VAR">user</field>
+                  </block>
+                </value>
+                <value name="NOTFOUND">
+                  <block type="text" id="Y5*M93Ar7`9V0HL,O30!">
+                    <field name="TEXT"></field>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <next>
+              <block type="controls_if" id="Ik_;W_DfEJfW5;k*~G+%">
+                <value name="IF0">
+                  <block type="text_isEmpty" id="SsIUi9APJSj(bfFjz#V{">
+                    <value name="VALUE">
+                      <block type="lexical_variable_get" id="@,zx_.+[6bnOgH6vPj!X">
+                        <field name="VAR">global email</field>
+                      </block>
+                    </value>
+                  </block>
+                </value>
+                <statement name="DO0">
+                  <block type="lexical_variable_set" id="G,?#t7!+7C#GK[DZrJm2">
+                    <field name="VAR">global email</field>
+                    <value name="VALUE">
+                      <block type="text" id="FN:U#lr66P2_R/S$GEaL">
+                        <field name="TEXT">anonymous</field>
+                      </block>
+                    </value>
+                  </block>
+                </statement>
+                <next>
+                  <block type="component_set_get" id=".Y?oz#g8v]hK3z3%}En%">
+                    <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="Label" set_or_get="set" property_name="Text" is_generic="false" instance_name="StatusLabel"></mutation>
+                    <field name="COMPONENT_SELECTOR">StatusLabel</field>
+                    <field name="PROP">Text</field>
+                    <value name="VALUE">
+                      <block type="text_join" id="f?PU4S9O=aRZBWE`J*/:">
+                        <mutation xmlns="http://www.w3.org/1999/xhtml" items="2"></mutation>
+                        <value name="ADD0">
+                          <block type="text" id="R{^kdLNME1sos]E{wcpa">
+                            <field name="TEXT">Signed in as </field>
+                          </block>
+                        </value>
+                        <value name="ADD1">
+                          <block type="lexical_variable_get" id="R.6LNpU}y?n*A4bpEIz3">
+                            <field name="VAR">global email</field>
+                          </block>
+                        </value>
+                      </block>
+                    </value>
+                    <next>
+                      <block type="procedures_callnoreturn" id="H+K`uV/BsL^Mc4(!)9d@">
+                        <mutation xmlns="http://www.w3.org/1999/xhtml" name="loadNotes"></mutation>
+                        <field name="PROCNAME">loadNotes</field>
+                        <next>
+                          <block type="controls_if" id="vZtJlK(ws~qY+v~d|M7-">
+                            <value name="IF0">
+                              <block type="logic_negate" id="}p5lx?6%7[`Zg^/P:`mc">
+                                <value name="BOOL">
+                                  <block type="lexical_variable_get" id="tDh^av7!JKO4NH6IhuLE">
+                                    <field name="VAR">global listening</field>
+                                  </block>
+                                </value>
+                              </block>
+                            </value>
+                            <statement name="DO0">
+                              <block type="lexical_variable_set" id="CU}vwoCfRImNWGX1OVpN">
+                                <field name="VAR">global listening</field>
+                                <value name="VALUE">
+                                  <block type="logic_boolean" id="D`fv`[AzNmCed2pVCF}(">
+                                    <field name="BOOL">TRUE</field>
+                                  </block>
+                                </value>
+                                <next>
+                                  <block type="component_method" id="xhNI[iTL3L}vAIi`P4Fj">
+                                    <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="SupabaseChannel" method_name="ListenToTable" is_generic="false" instance_name="Live"></mutation>
+                                    <field name="COMPONENT_SELECTOR">Live</field>
+                                    <value name="ARG0">
+                                      <block type="text" id="0C)CxtZ,DF?rfmXIS_%I">
+                                        <field name="TEXT">public</field>
+                                      </block>
+                                    </value>
+                                    <value name="ARG1">
+                                      <block type="text" id=",4{2ti`JTVQi[2?NFldw">
+                                        <field name="TEXT">notes</field>
+                                      </block>
+                                    </value>
+                                    <value name="ARG2">
+                                      <block type="helpers_dropdown" id="GJe-i7!8vHxR6yPWz)LM">
+                                        <mutation xmlns="http://www.w3.org/1999/xhtml" key="ChangeEvent"></mutation>
+                                        <field name="OPTION">All</field>
+                                      </block>
+                                    </value>
+                                    <value name="ARG3">
+                                      <block type="text" id="LN{!e~pF9StKkn9]W$2l">
+                                        <field name="TEXT"></field>
+                                      </block>
+                                    </value>
+                                    <next>
+                                      <block type="component_method" id="5#dF|j~XgU=ndg$?3q:%">
+                                        <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="SupabaseChannel" method_name="ListenToBroadcast" is_generic="false" instance_name="Live"></mutation>
+                                        <field name="COMPONENT_SELECTOR">Live</field>
+                                        <value name="ARG0">
+                                          <block type="text" id="-`G)W.Wki*XoW;/V/.JX">
+                                            <field name="TEXT">typing</field>
+                                          </block>
+                                        </value>
+                                      </block>
+                                    </next>
+                                  </block>
+                                </next>
+                              </block>
+                            </statement>
+                            <next>
+                              <block type="controls_if" id="{^FSlC;rPBhl?;xxI)T7">
+                                <value name="IF0">
+                                  <block type="logic_negate" id="%kpxg*`2KGbV]8yK02WC">
+                                    <value name="BOOL">
+                                      <block type="lexical_variable_get" id="5zww~s2+2lDHCt(Wn_Mz">
+                                        <field name="VAR">global subscribed</field>
+                                      </block>
+                                    </value>
+                                  </block>
+                                </value>
+                                <statement name="DO0">
+                                  <block type="lexical_variable_set" id="xJna7S[+`B$]VDe3s}/7">
+                                    <field name="VAR">global subscribed</field>
+                                    <value name="VALUE">
+                                      <block type="logic_boolean" id="GF~`O57Trf$#_^~lYSba">
+                                        <field name="BOOL">TRUE</field>
+                                      </block>
+                                    </value>
+                                    <next>
+                                      <block type="component_set_get" id="YUgFEgo5qY3mc(k3O[Zy">
+                                        <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="SupabaseChannel" set_or_get="set" property_name="PresenceKey" is_generic="false" instance_name="Live"></mutation>
+                                        <field name="COMPONENT_SELECTOR">Live</field>
+                                        <field name="PROP">PresenceKey</field>
+                                        <value name="VALUE">
+                                          <block type="dictionaries_lookup" id="eKb#,%_i)an9H5SIi(`b">
+                                            <value name="KEY">
+                                              <block type="text" id="ZXB={5$r=g;s?Mg4sD^+">
+                                                <field name="TEXT">id</field>
+                                              </block>
+                                            </value>
+                                            <value name="DICT">
+                                              <block type="lexical_variable_get" id="Qhdl/Oz}~K{vSO`A(fi`">
+                                                <mutation xmlns="http://www.w3.org/1999/xhtml">
+                                                  <eventparam name="user"></eventparam>
+                                                </mutation>
+                                                <field name="VAR">user</field>
+                                              </block>
+                                            </value>
+                                            <value name="NOTFOUND">
+                                              <block type="text" id="bEy=*9[PCr*O=oxkz%Xs">
+                                                <field name="TEXT"></field>
+                                              </block>
+                                            </value>
+                                          </block>
+                                        </value>
+                                        <next>
+                                          <block type="component_method" id="+J!mf9#i?@T5T{T{uFx5">
+                                            <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="SupabaseChannel" method_name="Subscribe" is_generic="false" instance_name="Live"></mutation>
+                                            <field name="COMPONENT_SELECTOR">Live</field>
+                                          </block>
+                                        </next>
+                                      </block>
+                                    </next>
+                                  </block>
+                                </statement>
+                              </block>
+                            </next>
+                          </block>
+                        </next>
+                      </block>
+                    </next>
+                  </block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </statement>
+        <statement name="ELSE">
+          <block type="component_set_get" id="#O_goK_9u~qIr}%IaQJ)">
+            <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="Label" set_or_get="set" property_name="Text" is_generic="false" instance_name="StatusLabel"></mutation>
+            <field name="COMPONENT_SELECTOR">StatusLabel</field>
+            <field name="PROP">Text</field>
+            <value name="VALUE">
+              <block type="text" id="4}belRWqMJ?SW#WM$#0n">
+                <field name="TEXT">Signed out</field>
+              </block>
+            </value>
+            <next>
+              <block type="lexical_variable_set" id="1z0!n?`fQdL*fccHF,E3">
+                <field name="VAR">global notes</field>
+                <value name="VALUE">
+                  <block type="lists_create_with" id="PFi9(2kMZZV$eu.ILQ?D">
+                    <mutation xmlns="http://www.w3.org/1999/xhtml" items="0"></mutation>
+                  </block>
+                </value>
+                <next>
+                  <block type="component_set_get" id="t|C8c-@#VsJw~}1~SJrb">
+                    <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="ListView" set_or_get="set" property_name="Elements" is_generic="false" instance_name="NotesList"></mutation>
+                    <field name="COMPONENT_SELECTOR">NotesList</field>
+                    <field name="PROP">Elements</field>
+                    <value name="VALUE">
+                      <block type="lists_create_with" id="]SRW2Yie5A{pg%?)l01n">
+                        <mutation xmlns="http://www.w3.org/1999/xhtml" items="0"></mutation>
+                      </block>
+                    </value>
+                    <next>
+                      <block type="lexical_variable_set" id="%EX-3]Bkf[)hOBZkY:py">
+                        <field name="VAR">global online</field>
+                        <value name="VALUE">
+                          <block type="dictionaries_create_with" id="dF$00R}gIFj?}VP8hH/q">
+                            <mutation xmlns="http://www.w3.org/1999/xhtml" items="0"></mutation>
+                          </block>
+                        </value>
+                        <next>
+                          <block type="component_set_get" id="yoPJ3JWAmj*{ktltSCY9">
+                            <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="Label" set_or_get="set" property_name="Text" is_generic="false" instance_name="OnlineLabel"></mutation>
+                            <field name="COMPONENT_SELECTOR">OnlineLabel</field>
+                            <field name="PROP">Text</field>
+                            <value name="VALUE">
+                              <block type="text" id="}cij9csgDY/pv5v.-e]j">
+                                <field name="TEXT"></field>
+                              </block>
+                            </value>
+                            <next>
+                              <block type="component_set_get" id="`)J0}Lno^cM=A-_vj!7/">
+                                <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="Label" set_or_get="set" property_name="Text" is_generic="false" instance_name="TypingLabel"></mutation>
+                                <field name="COMPONENT_SELECTOR">TypingLabel</field>
+                                <field name="PROP">Text</field>
+                                <value name="VALUE">
+                                  <block type="text" id="/}6+ygZ+nS0$hDTn;Yl?">
+                                    <field name="TEXT"></field>
+                                  </block>
+                                </value>
+                                <next>
+                                  <block type="controls_if" id="SHLultijzwRL9bkqxvw-">
+                                    <value name="IF0">
+                                      <block type="lexical_variable_get" id="n,$7~4SP#3-k{N5v`-nR">
+                                        <field name="VAR">global subscribed</field>
+                                      </block>
+                                    </value>
+                                    <statement name="DO0">
+                                      <block type="lexical_variable_set" id="yF#,XRFb#9rQ4n7#Bv,*">
+                                        <field name="VAR">global subscribed</field>
+                                        <value name="VALUE">
+                                          <block type="logic_boolean" id="#]hC3;7]h0qq|GBMsMtX">
+                                            <field name="BOOL">FALSE</field>
+                                          </block>
+                                        </value>
+                                        <next>
+                                          <block type="component_method" id=",$,P=6}9xWp0}$TbMr9B">
+                                            <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="SupabaseChannel" method_name="Unsubscribe" is_generic="false" instance_name="Live"></mutation>
+                                            <field name="COMPONENT_SELECTOR">Live</field>
+                                          </block>
+                                        </next>
+                                      </block>
+                                    </statement>
+                                  </block>
+                                </next>
+                              </block>
+                            </next>
+                          </block>
+                        </next>
+                      </block>
+                    </next>
+                  </block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </statement>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="p^SkckRd]NRMRSiBTVa=" x="0" y="2250">
+    <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="Button" is_generic="false" instance_name="AddButton" event_name="Click"></mutation>
+    <field name="COMPONENT_SELECTOR">AddButton</field>
+    <statement name="DO">
+      <block type="controls_if" id="F7c9{9u.pqdGh?ck-,3z">
+        <value name="IF0">
+          <block type="logic_negate" id="VVz?NX@.*OK`_Bla=D~-">
+            <value name="BOOL">
+              <block type="text_isEmpty" id="=g4;*:e.q%::u,82C~XM">
+                <value name="VALUE">
+                  <block type="component_set_get" id=";=M3LEm~Zoli`A(P]s0~">
+                    <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="TextBox" set_or_get="get" property_name="Text" is_generic="false" instance_name="NoteBox"></mutation>
+                    <field name="COMPONENT_SELECTOR">NoteBox</field>
+                    <field name="PROP">Text</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+          </block>
+        </value>
+        <statement name="DO0">
+          <block type="component_method" id="l2)OMNLU|RZAFHvSjVig">
+            <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="SupabaseDatabase" method_name="Insert" is_generic="false" instance_name="Notes"></mutation>
+            <field name="COMPONENT_SELECTOR">Notes</field>
+            <value name="ARG0">
+              <block type="text" id="MHu#Y-GMk|tYNM,:.$0#">
+                <field name="TEXT">add</field>
+              </block>
+            </value>
+            <value name="ARG1">
+              <block type="text" id="lzTZOp)_[m$IlHkHuy(b">
+                <field name="TEXT">notes</field>
+              </block>
+            </value>
+            <value name="ARG2">
+              <block type="dictionaries_create_with" id="^DgoI3dVU/~Eujq.6gH6">
+                <mutation xmlns="http://www.w3.org/1999/xhtml" items="1"></mutation>
+                <value name="ADD0">
+                  <block type="pair" id="+mmQ7!at++qL=Nwz|Dds">
+                    <value name="KEY">
+                      <block type="text" id="+xqbgixIo[=:k{vxRKH3">
+                        <field name="TEXT">body</field>
+                      </block>
+                    </value>
+                    <value name="VALUE">
+                      <block type="component_set_get" id="4.0q[aZ~4;c7oLKs;Vu9">
+                        <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="TextBox" set_or_get="get" property_name="Text" is_generic="false" instance_name="NoteBox"></mutation>
+                        <field name="COMPONENT_SELECTOR">NoteBox</field>
+                        <field name="PROP">Text</field>
+                      </block>
+                    </value>
+                  </block>
+                </value>
+              </block>
+            </value>
+          </block>
+        </statement>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="i.N^+R/aY)[=C|A;=AYl" x="0" y="2473">
+    <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="ListView" is_generic="false" instance_name="NotesList" event_name="AfterPicking"></mutation>
+    <field name="COMPONENT_SELECTOR">NotesList</field>
+    <statement name="DO">
+      <block type="component_method" id="%JG@)B7oeZ-mDpavAg7B">
+        <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="SupabaseDatabase" method_name="Delete" is_generic="false" instance_name="Notes"></mutation>
+        <field name="COMPONENT_SELECTOR">Notes</field>
+        <value name="ARG0">
+          <block type="text" id="!pS9BW,Qgd:4~~]6W[fB">
+            <field name="TEXT">delete</field>
+          </block>
+        </value>
+        <value name="ARG1">
+          <block type="text" id="9L-G^N4qmYsgSW$_pu/e">
+            <field name="TEXT">notes</field>
+          </block>
+        </value>
+        <value name="ARG2">
+          <block type="lists_create_with" id="L]4fr9qOnoWWm{8P(vIx">
+            <mutation xmlns="http://www.w3.org/1999/xhtml" items="1"></mutation>
+            <value name="ADD0">
+              <block type="component_method" id="b0y|nJO%4r,d+Hq}X:hu">
+                <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="SupabaseDatabase" method_name="Filter" is_generic="false" instance_name="Notes"></mutation>
+                <field name="COMPONENT_SELECTOR">Notes</field>
+                <value name="ARG0">
+                  <block type="text" id="Y3DE`()h~Q+lhA#.g3k3">
+                    <field name="TEXT">id</field>
+                  </block>
+                </value>
+                <value name="ARG1">
+                  <block type="helpers_dropdown" id="el*~U#;#{3{rpjg`;ihU">
+                    <mutation xmlns="http://www.w3.org/1999/xhtml" key="FilterOperator"></mutation>
+                    <field name="OPTION">Equals</field>
+                  </block>
+                </value>
+                <value name="ARG2">
+                  <block type="dictionaries_lookup" id="^T-`*^TT^;=kGl6YQ@4L">
+                    <value name="KEY">
+                      <block type="text" id="TcX~8Z@wMziNqnB_XA!%">
+                        <field name="TEXT">id</field>
+                      </block>
+                    </value>
+                    <value name="DICT">
+                      <block type="lists_select_item" id="2au)e2=9{H:3plEV+8zy">
+                        <value name="LIST">
+                          <block type="lexical_variable_get" id="@sn4[i*)d(vc:c@@]!!:">
+                            <field name="VAR">global notes</field>
+                          </block>
+                        </value>
+                        <value name="NUM">
+                          <block type="component_set_get" id="_?3I=g+[[l~CK?$g}hTg">
+                            <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="ListView" set_or_get="get" property_name="SelectionIndex" is_generic="false" instance_name="NotesList"></mutation>
+                            <field name="COMPONENT_SELECTOR">NotesList</field>
+                            <field name="PROP">SelectionIndex</field>
+                          </block>
+                        </value>
+                      </block>
+                    </value>
+                    <value name="NOTFOUND">
+                      <block type="math_number" id="IzxsX%.]AW.]RQU*Dscq">
+                        <field name="NUM">0</field>
+                      </block>
+                    </value>
+                  </block>
+                </value>
+              </block>
+            </value>
+          </block>
+        </value>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="%s=%V2]XLj+1?BpbF4g=" x="0" y="2807">
+    <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="SupabaseDatabase" is_generic="false" instance_name="Notes" event_name="GotRows"></mutation>
+    <field name="COMPONENT_SELECTOR">Notes</field>
+    <statement name="DO">
+      <block type="controls_if" id="DHdtbQyMHD/I0mct=sLC">
+        <mutation xmlns="http://www.w3.org/1999/xhtml" else="1"></mutation>
+        <value name="IF0">
+          <block type="logic_compare" id="#C,TUyE7[[i@K|CL/k6X">
+            <field name="OP">EQ</field>
+            <value name="A">
+              <block type="lexical_variable_get" id="ho7%F-6J@U0PTnV4N1l(">
+                <mutation xmlns="http://www.w3.org/1999/xhtml">
+                  <eventparam name="tag"></eventparam>
+                </mutation>
+                <field name="VAR">tag</field>
+              </block>
+            </value>
+            <value name="B">
+              <block type="text" id="^3S]c05a=f4H;Cd%K!x5">
+                <field name="TEXT">load</field>
+              </block>
+            </value>
+          </block>
+        </value>
+        <statement name="DO0">
+          <block type="lexical_variable_set" id="mN+.c$Lg6L(3`T$kxOXk">
+            <field name="VAR">global notes</field>
+            <value name="VALUE">
+              <block type="lexical_variable_get" id="z7DW*e;xgv*(H#)O(Jq-">
+                <mutation xmlns="http://www.w3.org/1999/xhtml">
+                  <eventparam name="rows"></eventparam>
+                </mutation>
+                <field name="VAR">rows</field>
+              </block>
+            </value>
+            <next>
+              <block type="component_set_get" id="wgxxmqHk^6fsmbzU5=IQ">
+                <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="ListView" set_or_get="set" property_name="Elements" is_generic="false" instance_name="NotesList"></mutation>
+                <field name="COMPONENT_SELECTOR">NotesList</field>
+                <field name="PROP">Elements</field>
+                <value name="VALUE">
+                  <block type="lists_map" id="tIM#^/8E7OJIlB_F!a;$">
+                    <field name="VAR">note</field>
+                    <value name="LIST">
+                      <block type="lexical_variable_get" id="5mgxkf]Q3n}BGaQ(GH0E">
+                        <mutation xmlns="http://www.w3.org/1999/xhtml">
+                          <eventparam name="rows"></eventparam>
+                        </mutation>
+                        <field name="VAR">rows</field>
+                      </block>
+                    </value>
+                    <value name="TO">
+                      <block type="dictionaries_lookup" id="31$B(-$qaWtKNS}-4xd6">
+                        <value name="KEY">
+                          <block type="text" id="Ku)|c1^1d#wRmUWay-hF">
+                            <field name="TEXT">body</field>
+                          </block>
+                        </value>
+                        <value name="DICT">
+                          <block type="lexical_variable_get" id="8P}.u%Zzyt6-w2VEZJTP">
+                            <field name="VAR">note</field>
+                          </block>
+                        </value>
+                        <value name="NOTFOUND">
+                          <block type="text" id="`u(1d:S;qEu!S_oH,!MQ">
+                            <field name="TEXT"></field>
+                          </block>
+                        </value>
+                      </block>
+                    </value>
+                  </block>
+                </value>
+              </block>
+            </next>
+          </block>
+        </statement>
+        <statement name="ELSE">
+          <block type="controls_if" id="i@LX92MF)(_O5!we,UJ_">
+            <value name="IF0">
+              <block type="logic_compare" id="#h8ihRue3.e@Hn`!#r$z">
+                <field name="OP">EQ</field>
+                <value name="A">
+                  <block type="lexical_variable_get" id="!5w{96tJ$6z!7_FRyBo)">
+                    <mutation xmlns="http://www.w3.org/1999/xhtml">
+                      <eventparam name="tag"></eventparam>
+                    </mutation>
+                    <field name="VAR">tag</field>
+                  </block>
+                </value>
+                <value name="B">
+                  <block type="text" id="]NJGy}*_KC#58@0nvGi^">
+                    <field name="TEXT">add</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <statement name="DO0">
+              <block type="component_set_get" id="Q,5F#,.:#Ja*vp-m}hrT">
+                <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="TextBox" set_or_get="set" property_name="Text" is_generic="false" instance_name="NoteBox"></mutation>
+                <field name="COMPONENT_SELECTOR">NoteBox</field>
+                <field name="PROP">Text</field>
+                <value name="VALUE">
+                  <block type="text" id="SCveJi4H{yP:R$n6[H^X">
+                    <field name="TEXT"></field>
+                  </block>
+                </value>
+              </block>
+            </statement>
+            <next>
+              <block type="procedures_callnoreturn" id="QRrv)E[Zia_!~z@ik%WH">
+                <mutation xmlns="http://www.w3.org/1999/xhtml" name="loadNotes"></mutation>
+                <field name="PROCNAME">loadNotes</field>
+              </block>
+            </next>
+          </block>
+        </statement>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="@j)j~p}97-Ao#JW4xklL" x="0" y="3233">
+    <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="SupabaseChannel" is_generic="false" instance_name="Live" event_name="ChangeReceived"></mutation>
+    <field name="COMPONENT_SELECTOR">Live</field>
+    <statement name="DO">
+      <block type="procedures_callnoreturn" id="aRvEtLc8Y.Ii56+mgi8z">
+        <mutation xmlns="http://www.w3.org/1999/xhtml" name="loadNotes"></mutation>
+        <field name="PROCNAME">loadNotes</field>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="^]EAK@2US-BwAc9$nU@(" x="0" y="3351">
+    <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="SupabaseChannel" is_generic="false" instance_name="Live" event_name="StatusChanged"></mutation>
+    <field name="COMPONENT_SELECTOR">Live</field>
+    <statement name="DO">
+      <block type="controls_if" id="|Q:b}YE]-ar30#S#SXIz">
+        <value name="IF0">
+          <block type="logic_compare" id="+k7xJ9e%;-AhtUtfaCHZ">
+            <field name="OP">EQ</field>
+            <value name="A">
+              <block type="lexical_variable_get" id="w-P$F2{w!@.7p!$$~r=|">
+                <mutation xmlns="http://www.w3.org/1999/xhtml">
+                  <eventparam name="status"></eventparam>
+                </mutation>
+                <field name="VAR">status</field>
+              </block>
+            </value>
+            <value name="B">
+              <block type="helpers_dropdown" id="nX#ND:0}?xTT)K*Z5zef">
+                <mutation xmlns="http://www.w3.org/1999/xhtml" key="ChannelStatus"></mutation>
+                <field name="OPTION">Subscribed</field>
+              </block>
+            </value>
+          </block>
+        </value>
+        <statement name="DO0">
+          <block type="component_method" id="y+L1/ZL5T48R}O$Mv;P~">
+            <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="SupabaseChannel" method_name="Track" is_generic="false" instance_name="Live"></mutation>
+            <field name="COMPONENT_SELECTOR">Live</field>
+            <value name="ARG0">
+              <block type="dictionaries_create_with" id="6x6HeS-SiL`79_]V`ZAL">
+                <mutation xmlns="http://www.w3.org/1999/xhtml" items="1"></mutation>
+                <value name="ADD0">
+                  <block type="pair" id="*dh=t]a[W/e?:On=6KYp">
+                    <value name="KEY">
+                      <block type="text" id="nujYIemL_ZmitizKF,3*">
+                        <field name="TEXT">email</field>
+                      </block>
+                    </value>
+                    <value name="VALUE">
+                      <block type="lexical_variable_get" id="I9y`/~3v0xe_$_}A0yC@">
+                        <field name="VAR">global email</field>
+                      </block>
+                    </value>
+                  </block>
+                </value>
+              </block>
+            </value>
+          </block>
+        </statement>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="90DwqO$Ig]FuO03U#RvI" x="0" y="3558">
+    <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="SupabaseChannel" is_generic="false" instance_name="Live" event_name="PresenceChanged"></mutation>
+    <field name="COMPONENT_SELECTOR">Live</field>
+    <statement name="DO">
+      <block type="controls_forEach" id="h]$o@U$}sji`^YnkW+8G">
+        <field name="VAR">key</field>
+        <value name="LIST">
+          <block type="dictionaries_getters" id="wK$Xjv7[O~H:{L)m6(Tz">
+            <field name="OP">KEYS</field>
+            <value name="DICT">
+              <block type="lexical_variable_get" id="LYPOa1ya[3*@70mI6Gw/">
+                <mutation xmlns="http://www.w3.org/1999/xhtml">
+                  <eventparam name="joins"></eventparam>
+                </mutation>
+                <field name="VAR">joins</field>
+              </block>
+            </value>
+          </block>
+        </value>
+        <statement name="DO">
+          <block type="dictionaries_set_pair" id="bo$XO]4L,N^0BB?ur%.H">
+            <value name="KEY">
+              <block type="lexical_variable_get" id="$6ULVwyaBB~oL-=`*[ut">
+                <field name="VAR">key</field>
+              </block>
+            </value>
+            <value name="DICT">
+              <block type="lexical_variable_get" id="$x.xocL[~;(:3r.Gnzg9">
+                <field name="VAR">global online</field>
+              </block>
+            </value>
+            <value name="VALUE">
+              <block type="logic_boolean" id="[XgMJf..PhAWDmc8C;/D">
+                <field name="BOOL">TRUE</field>
+              </block>
+            </value>
+          </block>
+        </statement>
+        <next>
+          <block type="controls_forEach" id="TaZk_#g8?v~8l=tDe:T0">
+            <field name="VAR">key</field>
+            <value name="LIST">
+              <block type="dictionaries_getters" id="xNRk!7zbUF=NZ=;^c1!^">
+                <field name="OP">KEYS</field>
+                <value name="DICT">
+                  <block type="lexical_variable_get" id="qA.S2XflKAez42XkvTpZ">
+                    <mutation xmlns="http://www.w3.org/1999/xhtml">
+                      <eventparam name="leaves"></eventparam>
+                    </mutation>
+                    <field name="VAR">leaves</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <statement name="DO">
+              <block type="dictionaries_delete_pair" id="*A~rjz!OJ(%DV02G]/Vy">
+                <value name="KEY">
+                  <block type="lexical_variable_get" id="H0Ler9E+(o9rM;W@Rp]!">
+                    <field name="VAR">key</field>
+                  </block>
+                </value>
+                <value name="DICT">
+                  <block type="lexical_variable_get" id="t]3wR]S:/{4@@.Ni.!_2">
+                    <field name="VAR">global online</field>
+                  </block>
+                </value>
+              </block>
+            </statement>
+            <next>
+              <block type="procedures_callnoreturn" id=",UI-~e$Vl,6F:uPwh1kf">
+                <mutation xmlns="http://www.w3.org/1999/xhtml" name="showOnline"></mutation>
+                <field name="PROCNAME">showOnline</field>
+              </block>
+            </next>
+          </block>
+        </next>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="ydGDU9]kSTmxB;j{kQoJ" x="0" y="3891">
+    <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="TextBox" is_generic="false" instance_name="NoteBox" event_name="TextChanged"></mutation>
+    <field name="COMPONENT_SELECTOR">NoteBox</field>
+    <statement name="DO">
+      <block type="controls_if" id="h4R.;x8+at),d:F79gfb">
+        <value name="IF0">
+          <block type="logic_operation" id="/fnu1%1|YiSOROjD?AG?">
+            <mutation xmlns="http://www.w3.org/1999/xhtml" items="2"></mutation>
+            <field name="OP">AND</field>
+            <value name="A">
+              <block type="lexical_variable_get" id="j(V:ciKZipcDQm}?}TuT">
+                <field name="VAR">global subscribed</field>
+              </block>
+            </value>
+            <value name="B">
+              <block type="math_compare" id="WX98L,+Yyo#1n2zW/1NM">
+                <field name="OP">EQ</field>
+                <value name="A">
+                  <block type="text_length" id="flzyav+cyT`Fh[ajJ}ZF">
+                    <value name="VALUE">
+                      <block type="component_set_get" id="!h_^?@9~GV^0km}Dg/~?">
+                        <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="TextBox" set_or_get="get" property_name="Text" is_generic="false" instance_name="NoteBox"></mutation>
+                        <field name="COMPONENT_SELECTOR">NoteBox</field>
+                        <field name="PROP">Text</field>
+                      </block>
+                    </value>
+                  </block>
+                </value>
+                <value name="B">
+                  <block type="math_number" id="J=:_p7F0Kvg#6i2|L9Jt">
+                    <field name="NUM">1</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+          </block>
+        </value>
+        <statement name="DO0">
+          <block type="component_method" id="xHj7N_nLQ-~%X94HYh%|">
+            <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="SupabaseChannel" method_name="Broadcast" is_generic="false" instance_name="Live"></mutation>
+            <field name="COMPONENT_SELECTOR">Live</field>
+            <value name="ARG0">
+              <block type="text" id="4(`o85Rjl{F{GfSLZN5A">
+                <field name="TEXT">typing</field>
+              </block>
+            </value>
+            <value name="ARG1">
+              <block type="dictionaries_create_with" id="V(Aa29k7=s6A{y^]-zn{">
+                <mutation xmlns="http://www.w3.org/1999/xhtml" items="1"></mutation>
+                <value name="ADD0">
+                  <block type="pair" id="D0=-9?*_MP{iJkwU-)5s">
+                    <value name="KEY">
+                      <block type="text" id="rWx^7mU?Hr.wBK?m*[br">
+                        <field name="TEXT">who</field>
+                      </block>
+                    </value>
+                    <value name="VALUE">
+                      <block type="lexical_variable_get" id="(R!dK~S7ffsR8LY#ayxd">
+                        <field name="VAR">global email</field>
+                      </block>
+                    </value>
+                  </block>
+                </value>
+              </block>
+            </value>
+          </block>
+        </statement>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="[GdrRA@q*kqh/1w]|KZ*" x="0" y="4109">
+    <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="SupabaseChannel" is_generic="false" instance_name="Live" event_name="BroadcastReceived"></mutation>
+    <field name="COMPONENT_SELECTOR">Live</field>
+    <statement name="DO">
+      <block type="component_set_get" id="87:LM%=4gnnAGE}m]~y_">
+        <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="Label" set_or_get="set" property_name="Text" is_generic="false" instance_name="TypingLabel"></mutation>
+        <field name="COMPONENT_SELECTOR">TypingLabel</field>
+        <field name="PROP">Text</field>
+        <value name="VALUE">
+          <block type="text_join" id="AWN+^y~X|uP9n@:TFhsU">
+            <mutation xmlns="http://www.w3.org/1999/xhtml" items="2"></mutation>
+            <value name="ADD0">
+              <block type="dictionaries_lookup" id="wVmh;lq(47h:8Zdn6HuD">
+                <value name="KEY">
+                  <block type="text" id="LTp5z6Y-*u`~TCQs+dU_">
+                    <field name="TEXT">who</field>
+                  </block>
+                </value>
+                <value name="DICT">
+                  <block type="lexical_variable_get" id="kv:S}Jyab=xEIx8}c2ZD">
+                    <mutation xmlns="http://www.w3.org/1999/xhtml">
+                      <eventparam name="payload"></eventparam>
+                    </mutation>
+                    <field name="VAR">payload</field>
+                  </block>
+                </value>
+                <value name="NOTFOUND">
+                  <block type="text" id="mAufESOpjmVlXDpfNq[2">
+                    <field name="TEXT">Someone</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <value name="ADD1">
+              <block type="text" id="fqu`OHsyMYNedt+B*s4t">
+                <field name="TEXT"> is typing...</field>
+              </block>
+            </value>
+          </block>
+        </value>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="{QKFpQZ=eRA^Vc8d:cQ3" x="0" y="4308">
+    <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="Button" is_generic="false" instance_name="StatsButton" event_name="Click"></mutation>
+    <field name="COMPONENT_SELECTOR">StatsButton</field>
+    <statement name="DO">
+      <block type="component_method" id=".JWhWBp:EQqI1$Hu2xoK">
+        <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="SupabaseFunctions" method_name="Invoke" is_generic="false" instance_name="Stats"></mutation>
+        <field name="COMPONENT_SELECTOR">Stats</field>
+        <value name="ARG0">
+          <block type="text" id="Pw3`A4^oML@6rsrHn(c}">
+            <field name="TEXT">stats</field>
+          </block>
+        </value>
+        <value name="ARG1">
+          <block type="text" id="M5fS5k33XKi%MMVa7l5=">
+            <field name="TEXT">note-stats</field>
+          </block>
+        </value>
+        <value name="ARG2">
+          <block type="dictionaries_create_with" id="rMG{xQBX|9.FQ%,1+gtV">
+            <mutation xmlns="http://www.w3.org/1999/xhtml" items="1"></mutation>
+            <value name="ADD0">
+              <block type="pair" id="-oWHXaaeLYHt{fU;},`(">
+                <value name="KEY">
+                  <block type="text" id="Y.+9DRL9T|[Z*.%auxuz">
+                    <field name="TEXT">notes</field>
+                  </block>
+                </value>
+                <value name="VALUE">
+                  <block type="lists_map" id="%B7-~%;Ae:H3T,l.5`Fc">
+                    <field name="VAR">note</field>
+                    <value name="LIST">
+                      <block type="lexical_variable_get" id="~Y+Om+2p]9?yXmZpW@;X">
+                        <field name="VAR">global notes</field>
+                      </block>
+                    </value>
+                    <value name="TO">
+                      <block type="dictionaries_lookup" id="kD`4[$xN91}a:)D(f@)`">
+                        <value name="KEY">
+                          <block type="text" id="6Z-bs;.jkMf.AP#}eqWr">
+                            <field name="TEXT">body</field>
+                          </block>
+                        </value>
+                        <value name="DICT">
+                          <block type="lexical_variable_get" id="TpbDG^o9CldH8W643K.s">
+                            <field name="VAR">note</field>
+                          </block>
+                        </value>
+                        <value name="NOTFOUND">
+                          <block type="text" id="d8buTLlHi|3.|.R$M*m|">
+                            <field name="TEXT"></field>
+                          </block>
+                        </value>
+                      </block>
+                    </value>
+                  </block>
+                </value>
+              </block>
+            </value>
+          </block>
+        </value>
+        <value name="ARG3">
+          <block type="dictionaries_create_with" id="(J$ju-5lyp6IHb1c([`K">
+            <mutation xmlns="http://www.w3.org/1999/xhtml" items="0"></mutation>
+          </block>
+        </value>
+        <value name="ARG4">
+          <block type="helpers_dropdown" id="T!i9HsxDvG(t-{naKQ,/">
+            <mutation xmlns="http://www.w3.org/1999/xhtml" key="RequestMethod"></mutation>
+            <field name="OPTION">Post</field>
+          </block>
+        </value>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="?ad}k|Q03$w8{_l99xaX" x="0" y="4657">
+    <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="SupabaseFunctions" is_generic="false" instance_name="Stats" event_name="GotResponse"></mutation>
+    <field name="COMPONENT_SELECTOR">Stats</field>
+    <statement name="DO">
+      <block type="procedures_callnoreturn" id="1];Hd.zE%%1EZr;oG:X5">
+        <mutation xmlns="http://www.w3.org/1999/xhtml" name="show">
+          <arg name="message"></arg>
+        </mutation>
+        <field name="PROCNAME">show</field>
+        <value name="ARG0">
+          <block type="text_join" id="o||8@tW_rn%;/UJWGfbQ">
+            <mutation xmlns="http://www.w3.org/1999/xhtml" items="4"></mutation>
+            <value name="ADD0">
+              <block type="dictionaries_lookup" id="f.IBE~DsM1Vbne_,V3Bs">
+                <value name="KEY">
+                  <block type="text" id="iCr}l~pI]kp|@|m4VD.]">
+                    <field name="TEXT">count</field>
+                  </block>
+                </value>
+                <value name="DICT">
+                  <block type="lexical_variable_get" id="(jzuMaVsbFhbcH9-DR_R">
+                    <mutation xmlns="http://www.w3.org/1999/xhtml">
+                      <eventparam name="body"></eventparam>
+                    </mutation>
+                    <field name="VAR">body</field>
+                  </block>
+                </value>
+                <value name="NOTFOUND">
+                  <block type="math_number" id="yvIMz)FjN5#eGCXSC2v)">
+                    <field name="NUM">0</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <value name="ADD1">
+              <block type="text" id="?,w:9zanS#?4]7U91lxu">
+                <field name="TEXT"> notes, </field>
+              </block>
+            </value>
+            <value name="ADD2">
+              <block type="dictionaries_lookup" id="1m*#Wm/4m1Mo,FVMgpg}">
+                <value name="KEY">
+                  <block type="text" id="ee!#}R@T9,70Nw0j(0N+">
+                    <field name="TEXT">words</field>
+                  </block>
+                </value>
+                <value name="DICT">
+                  <block type="lexical_variable_get" id="!9:C$*NQK[)J,rnc./n{">
+                    <mutation xmlns="http://www.w3.org/1999/xhtml">
+                      <eventparam name="body"></eventparam>
+                    </mutation>
+                    <field name="VAR">body</field>
+                  </block>
+                </value>
+                <value name="NOTFOUND">
+                  <block type="math_number" id="W8,ikAo0lOw=#0.Yt1,Y">
+                    <field name="NUM">0</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <value name="ADD3">
+              <block type="text" id="twce1#4Elv1k1q/-[N3C">
+                <field name="TEXT"> words</field>
+              </block>
+            </value>
+          </block>
+        </value>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id=":H:coM/oD2ifb=X{HQLQ" x="0" y="4991">
+    <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="Button" is_generic="false" instance_name="PhotoButton" event_name="Click"></mutation>
+    <field name="COMPONENT_SELECTOR">PhotoButton</field>
+    <statement name="DO">
+      <block type="component_method" id="S9qO9PkC9f?UTIIU4#sL">
+        <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="SupabaseStorage" method_name="Upload" is_generic="false" instance_name="Photos"></mutation>
+        <field name="COMPONENT_SELECTOR">Photos</field>
+        <value name="ARG0">
+          <block type="text" id="PZ%M,@!Z0Iyo;x1xBE!f">
+            <field name="TEXT">photo</field>
+          </block>
+        </value>
+        <value name="ARG1">
+          <block type="text_join" id="umsOQQ`l9|HoerM$1giA">
+            <mutation xmlns="http://www.w3.org/1999/xhtml" items="2"></mutation>
+            <value name="ADD0">
+              <block type="dictionaries_lookup" id="TRv^Bc3~hG3Wl#*uwCLq">
+                <value name="KEY">
+                  <block type="text" id="~A{R=kPCRt~!#K,,nZAf">
+                    <field name="TEXT">id</field>
+                  </block>
+                </value>
+                <value name="DICT">
+                  <block type="component_set_get" id="UWR}G.h1G@}0_Z`5semM">
+                    <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="Supabase" set_or_get="get" property_name="CurrentUser" is_generic="false" instance_name="Supabase1"></mutation>
+                    <field name="COMPONENT_SELECTOR">Supabase1</field>
+                    <field name="PROP">CurrentUser</field>
+                  </block>
+                </value>
+                <value name="NOTFOUND">
+                  <block type="text" id="jW2mq^If/N1g]$}HB#(;">
+                    <field name="TEXT"></field>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <value name="ADD1">
+              <block type="text" id="cOjih#WCmRT1S@cr|jSK">
+                <field name="TEXT">/photo.png</field>
+              </block>
+            </value>
+          </block>
+        </value>
+        <value name="ARG2">
+          <block type="text" id="+[N703%Q$lw;jCY.CIqL">
+            <field name="TEXT">//photo.png</field>
+          </block>
+        </value>
+        <value name="ARG3">
+          <block type="text" id="]w:BkTc~^tgN3|J$_Q{Y">
+            <field name="TEXT"></field>
+          </block>
+        </value>
+        <value name="ARG4">
+          <block type="logic_boolean" id="vvHS+[0|8+QMjXbZ.#,}">
+            <field name="BOOL">TRUE</field>
+          </block>
+        </value>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="WLj]ZfgiflKL|?POu9%6" x="0" y="5298">
+    <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="SupabaseStorage" is_generic="false" instance_name="Photos" event_name="Uploaded"></mutation>
+    <field name="COMPONENT_SELECTOR">Photos</field>
+    <statement name="DO">
+      <block type="component_method" id="P?W_C[(rse.7?/*,=2I(">
+        <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="SupabaseStorage" method_name="SignedUrl" is_generic="false" instance_name="Photos"></mutation>
+        <field name="COMPONENT_SELECTOR">Photos</field>
+        <value name="ARG0">
+          <block type="text" id="J]:0po0Ug~cVa/`jf7Wy">
+            <field name="TEXT">photo</field>
+          </block>
+        </value>
+        <value name="ARG1">
+          <block type="lexical_variable_get" id="Gt22k%YZL$G}zPS(AfYg">
+            <mutation xmlns="http://www.w3.org/1999/xhtml">
+              <eventparam name="path"></eventparam>
+            </mutation>
+            <field name="VAR">path</field>
+          </block>
+        </value>
+        <value name="ARG2">
+          <block type="math_number" id="5g%J$d$VA%2IF?X9~F?G">
+            <field name="NUM">3600</field>
+          </block>
+        </value>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="1]wuR~{`6,G*//u7*hs," x="0" y="5497">
+    <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="SupabaseStorage" is_generic="false" instance_name="Photos" event_name="GotSignedUrl"></mutation>
+    <field name="COMPONENT_SELECTOR">Photos</field>
+    <statement name="DO">
+      <block type="component_set_get" id="+`KI]hb{6k4KD)7FA)q6">
+        <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="Image" set_or_get="set" property_name="Picture" is_generic="false" instance_name="PhotoImage"></mutation>
+        <field name="COMPONENT_SELECTOR">PhotoImage</field>
+        <field name="PROP">Picture</field>
+        <value name="VALUE">
+          <block type="lexical_variable_get" id="O|I-t$i=Ik5m43#ccWjO">
+            <mutation xmlns="http://www.w3.org/1999/xhtml">
+              <eventparam name="url"></eventparam>
+            </mutation>
+            <field name="VAR">url</field>
+          </block>
+        </value>
+        <next>
+          <block type="procedures_callnoreturn" id="%QiD7]:+ff9qOkcD13a7">
+            <mutation xmlns="http://www.w3.org/1999/xhtml" name="show">
+              <arg name="message"></arg>
+            </mutation>
+            <field name="PROCNAME">show</field>
+            <value name="ARG0">
+              <block type="text" id="Z)8qc(h6an,Xtxk.h3~r">
+                <field name="TEXT">Photo uploaded</field>
+              </block>
+            </value>
+          </block>
+        </next>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="+byBg!O%,1mYvXXTJpWq" x="0" y="5669">
+    <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="Supabase" is_generic="false" instance_name="Supabase1" event_name="Error"></mutation>
+    <field name="COMPONENT_SELECTOR">Supabase1</field>
+    <statement name="DO">
+      <block type="procedures_callnoreturn" id="-FC6.YxK{,^;6/jxg?xD">
+        <mutation xmlns="http://www.w3.org/1999/xhtml" name="show">
+          <arg name="message"></arg>
+        </mutation>
+        <field name="PROCNAME">show</field>
+        <value name="ARG0">
+          <block type="text_join" id="Sa[U(]D-uLHK;9wB7.Bl">
+            <mutation xmlns="http://www.w3.org/1999/xhtml" items="2"></mutation>
+            <value name="ADD0">
+              <block type="text" id="WR(QME*ix-|F!;[hU/2G">
+                <field name="TEXT">Error: </field>
+              </block>
+            </value>
+            <value name="ADD1">
+              <block type="lexical_variable_get" id="St`8zTkFblo7]OwacaSO">
+                <mutation xmlns="http://www.w3.org/1999/xhtml">
+                  <eventparam name="message"></eventparam>
+                </mutation>
+                <field name="VAR">message</field>
+              </block>
+            </value>
+          </block>
+        </value>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="~%MkE|sZIy/Bpo:TnLJ1" x="0" y="5841">
+    <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="SupabaseDatabase" is_generic="false" instance_name="Notes" event_name="Error"></mutation>
+    <field name="COMPONENT_SELECTOR">Notes</field>
+    <statement name="DO">
+      <block type="procedures_callnoreturn" id="3x04Sf2bhpln$(fGb-Zp">
+        <mutation xmlns="http://www.w3.org/1999/xhtml" name="show">
+          <arg name="message"></arg>
+        </mutation>
+        <field name="PROCNAME">show</field>
+        <value name="ARG0">
+          <block type="text_join" id="9Tk#fyjZvhBb|jj{Crm_">
+            <mutation xmlns="http://www.w3.org/1999/xhtml" items="2"></mutation>
+            <value name="ADD0">
+              <block type="text" id="i5Ow}45OAAC@J/G)/;TB">
+                <field name="TEXT">Error: </field>
+              </block>
+            </value>
+            <value name="ADD1">
+              <block type="lexical_variable_get" id="CYexX21FahfhyWyBarp|">
+                <mutation xmlns="http://www.w3.org/1999/xhtml">
+                  <eventparam name="message"></eventparam>
+                </mutation>
+                <field name="VAR">message</field>
+              </block>
+            </value>
+          </block>
+        </value>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="=|5kTb@8iMe_j|9$ev6J" x="0" y="6013">
+    <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="SupabaseStorage" is_generic="false" instance_name="Photos" event_name="Error"></mutation>
+    <field name="COMPONENT_SELECTOR">Photos</field>
+    <statement name="DO">
+      <block type="procedures_callnoreturn" id="Gxsdy9Dk++iFNEiUIS_q">
+        <mutation xmlns="http://www.w3.org/1999/xhtml" name="show">
+          <arg name="message"></arg>
+        </mutation>
+        <field name="PROCNAME">show</field>
+        <value name="ARG0">
+          <block type="text_join" id="Svspr}rGL+J%$#9W6m%$">
+            <mutation xmlns="http://www.w3.org/1999/xhtml" items="2"></mutation>
+            <value name="ADD0">
+              <block type="text" id="[A@SL8=s$R~o.k$?yHgs">
+                <field name="TEXT">Error: </field>
+              </block>
+            </value>
+            <value name="ADD1">
+              <block type="lexical_variable_get" id="Qhf1UxNB4*]pXw#y~:]x">
+                <mutation xmlns="http://www.w3.org/1999/xhtml">
+                  <eventparam name="message"></eventparam>
+                </mutation>
+                <field name="VAR">message</field>
+              </block>
+            </value>
+          </block>
+        </value>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="n^::7NOgk:$fj/!f5Ev4" x="0" y="6185">
+    <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="SupabaseChannel" is_generic="false" instance_name="Live" event_name="Error"></mutation>
+    <field name="COMPONENT_SELECTOR">Live</field>
+    <statement name="DO">
+      <block type="procedures_callnoreturn" id="JJ(!(~Z,1+%XTWdI6nBh">
+        <mutation xmlns="http://www.w3.org/1999/xhtml" name="show">
+          <arg name="message"></arg>
+        </mutation>
+        <field name="PROCNAME">show</field>
+        <value name="ARG0">
+          <block type="text_join" id="KK?[F6U:#rlCz-j{~@qG">
+            <mutation xmlns="http://www.w3.org/1999/xhtml" items="2"></mutation>
+            <value name="ADD0">
+              <block type="text" id=",%6O%-KL!{?%S|O~`stF">
+                <field name="TEXT">Error: </field>
+              </block>
+            </value>
+            <value name="ADD1">
+              <block type="lexical_variable_get" id="Cu_#:wbH9Pa0Nt;[t=5s">
+                <mutation xmlns="http://www.w3.org/1999/xhtml">
+                  <eventparam name="message"></eventparam>
+                </mutation>
+                <field name="VAR">message</field>
+              </block>
+            </value>
+          </block>
+        </value>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="z`@:SbZwOeA.JhLYJK0." x="0" y="6357">
+    <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="SupabaseFunctions" is_generic="false" instance_name="Stats" event_name="Error"></mutation>
+    <field name="COMPONENT_SELECTOR">Stats</field>
+    <statement name="DO">
+      <block type="procedures_callnoreturn" id="P`fNt|JK:P|b4aG-i0?r">
+        <mutation xmlns="http://www.w3.org/1999/xhtml" name="show">
+          <arg name="message"></arg>
+        </mutation>
+        <field name="PROCNAME">show</field>
+        <value name="ARG0">
+          <block type="text_join" id="^+1lqq6!k+-sd%TB+)sx">
+            <mutation xmlns="http://www.w3.org/1999/xhtml" items="2"></mutation>
+            <value name="ADD0">
+              <block type="text" id="eVZ|=-,!i54-UE@6xPCC">
+                <field name="TEXT">Error: </field>
+              </block>
+            </value>
+            <value name="ADD1">
+              <block type="lexical_variable_get" id="tEFAUq{=ZV]^,jtK(h?e">
+                <mutation xmlns="http://www.w3.org/1999/xhtml">
+                  <eventparam name="message"></eventparam>
+                </mutation>
+                <field name="VAR">message</field>
+              </block>
+            </value>
+          </block>
+        </value>
+      </block>
+    </statement>
+  </block>
+  <yacodeblocks xmlns="https://appinventor.mit.edu/ns/project/" ya-version="237" language-version="39"></yacodeblocks>
+</xml>

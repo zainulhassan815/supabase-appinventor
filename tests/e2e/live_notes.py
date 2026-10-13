@@ -9,7 +9,6 @@ import urllib.request
 import xml.etree.ElementTree as ET
 
 ADB = os.environ.get('ADB', os.path.expanduser('~/Android/sdk/platform-tools/adb'))
-PACKAGE = 'dev.dreamerslab.supabase.e2e'
 PASSWORD = 'secret123'
 
 
@@ -125,11 +124,7 @@ class Laptop:
             {'topic': 'notes', 'event': 'typing', 'payload': {'who': 'laptop'}, 'private': False}]})
 
 
-def launch():
-    adb('shell', 'monkey', '-p', PACKAGE, '-c', 'android.intent.category.LAUNCHER', '1')
-
-
-def main(url, key, shots):
+def main(package, url, key, shots):
     email = f'demo{int(time.time())}@example.com'
     wait('app starts signed out', with_text('Signed out'))
 
@@ -163,8 +158,8 @@ def main(url, key, shots):
     laptop.delete_note(laptop_note)
     wait('laptop delete arrives through realtime', not_listed('From the laptop'))
 
-    adb('shell', 'am', 'force-stop', PACKAGE)
-    launch()
+    adb('shell', 'am', 'force-stop', package)
+    adb('shell', 'monkey', '-p', package, '-c', 'android.intent.category.LAUNCHER', '1')
     wait('session restored after restart', with_text(f'Signed in as {email}'))
     wait('notes reloaded after restart', listed('Call mom today'))
 
