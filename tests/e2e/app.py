@@ -19,6 +19,7 @@ def components(url, key):
         ('SupabaseDatabase', f'{EXTENSION}.SupabaseDatabase', {'Client': 'Supabase1'}),
         ('SupabaseStorage', f'{EXTENSION}.SupabaseStorage', {'Client': 'Supabase1', 'Bucket': 'uploads'}),
         ('SupabaseChannel', f'{EXTENSION}.SupabaseChannel', {'Client': 'Supabase1', 'Topic': 'e2e', 'PresenceKey': 'tester'}),
+        ('SupabaseFunctions', f'{EXTENSION}.SupabaseFunctions', {'Client': 'Supabase1'}),
         ('File', f'{RUNTIME}.File', {}),
         ('Label', f'{RUNTIME}.Label', {'Text': ''}),
     ]

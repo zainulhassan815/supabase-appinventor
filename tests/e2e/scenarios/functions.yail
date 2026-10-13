@@ -1,0 +1,25 @@
+(def (p$invoke tag name body headers method)
+  (call-component-method 'SupabaseFunctions1 'Invoke (*list-for-runtime* tag name body headers method) '(text text any dictionary text)))
+
+(define-event Screen1 Initialize()(set-this-form)
+  (call-component-method 'Supabase1 'SignUp
+    (*list-for-runtime* (string-append "e2e" (number->string (java.lang.System:currentTimeMillis)) "@example.com") "secret123" (make-yail-dictionary))
+    '(text text dictionary)))
+
+(define-event Supabase1 SessionChanged($status $user)(set-this-form)
+  (when (yail-equal? (lexical-value $status) "SignedIn")
+    ((get-var p$invoke) "json" "echo" (make-yail-dictionary (make-dictionary-pair "a" 1)) (make-yail-dictionary (make-dictionary-pair "x-test" "yes")) "POST")))
+
+(define-event SupabaseFunctions1 GotResponse($tag $status $body)(set-this-form)
+  (define tag (lexical-value $tag))
+  ((get-var p$report) (string-append tag " " (coerce-to-string (lexical-value $status)) " " (coerce-to-string (lexical-value $body))))
+  (cond
+    ((yail-equal? tag "json") ((get-var p$invoke) "text" "echo" "plain text" (make-yail-dictionary) "PUT"))
+    ((yail-equal? tag "text") ((get-var p$invoke) "get" "echo" "" (make-yail-dictionary) "GET"))
+    ((yail-equal? tag "get") ((get-var p$invoke) "hello" "hello" (make-yail-dictionary (make-dictionary-pair "name" "App Inventor")) (make-yail-dictionary) "POST"))
+    ((yail-equal? tag "hello") ((get-var p$invoke) "fail" "echo" "" (make-yail-dictionary (make-dictionary-pair "x-status" "418")) "POST"))))
+
+(define-event SupabaseFunctions1 Error($tag $operation $code $message)(set-this-form)
+  ((get-var p$report) (string-append "error " (lexical-value $tag) " " (lexical-value $operation) " " (lexical-value $code)))
+  (when (yail-equal? (lexical-value $tag) "fail")
+    ((get-var p$invoke) "missing" "no-such-function" "" (make-yail-dictionary) "POST")))
