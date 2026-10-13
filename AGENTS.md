@@ -25,4 +25,15 @@ and the limits App Inventor imposes.
 
 ## Project notes
 
-Add conventions specific to this project here.
+- Calls to Supabase answer through events, never block values: App Inventor
+  doesn't wait for a `Continuation` called after the method returns. Data
+  blocks take a `tag` that their result and `Error` events carry back.
+- Fire startup events from `OnInitializeListener` (or after a post on a
+  `ReplForm`), never from a constructor: App Inventor drops events fired before
+  `Screen.Initialize`.
+- supabase-kt's `-jvm` artifacts only, with kotlin-reflect kept out. Use the
+  reified postgrest overloads with `JsonObject` or `List<JsonObject>`.
+- `samples/live-notes/schema.sql` is the one schema: users run it, and the local
+  backend seeds from it.
+- Verify changes with the device tests in `docs/testing.md`, not only
+  `rush build`.
