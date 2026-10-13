@@ -1,0 +1,54 @@
+# This is the version name of your extension. You should update it everytime you
+# publish a new version of your extension.
+version: '0.1.0'
+
+# The minimum Android SDK level your extension supports. Minimum SDK defined in
+# AndroidManifest.xml is ignored, you should always define it here.
+min_sdk: 24
+
+
+# Kotlin specific configuration.
+kotlin:
+  compiler_version: '2.4.20'
+
+# External libraries your extension depends on. These can be local JARs / AARs
+# stored in the "deps" directory or coordinates of remote Maven artifacts in
+# <groupId>:<artifactId>:<version> format. AARs are shipped as-is, so their
+# resources (layouts, drawables, etc.) are available at runtime.
+dependencies:
+- org.jetbrains.kotlin:kotlin-stdlib:2.4.20
+- org.jetbrains.kotlinx:kotlinx-coroutines-android:1.11.0
+- io.github.jan-tennert.supabase:auth-kt-jvm:3.8.0
+- io.github.jan-tennert.supabase:postgrest-kt-jvm:3.8.0
+- io.github.jan-tennert.supabase:realtime-kt-jvm:3.8.0
+- io.github.jan-tennert.supabase:storage-kt-jvm:3.8.0
+- io.github.jan-tennert.supabase:functions-kt-jvm:3.8.0
+- io.ktor:ktor-client-okhttp-jvm:3.5.1
+#- example.jar                 # Local JAR or AAR file stored in "deps" directory
+#- com.example:foo-bar:1.2.3   # Coordinate of some remote Maven artifact
+
+# Dependencies are resolved from Maven Central and Google's Maven repository. If
+# the library you want to use is not available in these repositories, you can
+# add additional repositories by specifying their URLs here.
+#repositories:
+#- https://jitpack.io
+
+# Assets that your extension needs. Every asset file must be stored in the assets
+# directory as well as declared here. Assets can be of any type.
+#assets:
+#- data.json
+
+# Homepage of your extension. This may be the announcement thread on community 
+# forums or a link to your GitHub repository.
+homepage: https://github.com/zainulhassan815/supabase-appinventor
+
+# Path to the license file of your extension. This should be a path to a local
+# file or link to something hosted online.
+#license: LICENSE.txt
+
+# Similar to dependencies, except libraries defined as provided are not included
+# in the final AIX. This is useful when you want to use a library in your
+# extension but don't want to include it in the final AIX because it's already
+# included in the App Inventor.
+provided_dependencies:
+- org.jetbrains.kotlin:kotlin-reflect:2.4.0

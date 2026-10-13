@@ -1,0 +1,35 @@
+# Prevents extension classes (annotated with `@Extension`) from being removed, renamed or repackged.
+-keep @com.google.appinventor.components.annotations.Extension public class * {
+  public *;
+}
+
+# Prevents helper classes from being removed, renamed or repackaged
+-keepnames class * implements com.google.appinventor.components.common.OptionList {
+  *;
+}
+
+# ProGuard sometimes (randomly) renames references to the following classes in 
+# the extensions, this rule prevents that from happening. Keep this rule even
+# if you don't use these classes in your extension.
+-keeppackagenames gnu.kawa**, gnu.expr**
+
+# Repackages all the optimized classes into dev.dreamerslab.supabase.repackaged package in resulting
+# AIX. Repackaging is necessary to avoid clashes with the other extensions that
+# might be using same libraries as you.
+-repackageclasses dev.dreamerslab.supabase.repacked
+
+-dontwarn kotlinx.atomicfu.**
+-dontwarn kotlin.concurrent.atomics.**
+-dontwarn kotlin.jvm.internal.EnhancedNullability
+-dontwarn kotlin.reflect.full.**
+-dontwarn kotlin.reflect.jvm.**
+-dontwarn androidx.annotation.**
+-dontwarn java.beans.**
+-dontwarn java.awt.**
+-dontwarn java.lang.management.**
+-dontwarn com.sun.nio.file.**
+-dontwarn org.bouncycastle.**
+-dontwarn org.conscrypt.**
+-dontwarn org.openjsse.**
+-dontwarn com.oracle.svm.core.annotate.**
+-dontwarn org.graalvm.nativeimage.**
