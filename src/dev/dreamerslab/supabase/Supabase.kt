@@ -26,6 +26,7 @@ import io.github.jan.supabase.auth.providers.builtin.Email
 import io.github.jan.supabase.auth.user.UserInfo
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.functions.Functions
+import io.github.jan.supabase.logging.LogLevel
 import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.realtime.Realtime
 import io.github.jan.supabase.storage.Storage
@@ -148,6 +149,7 @@ class Supabase(container: ComponentContainer) : AndroidNonvisibleComponent(conta
         ApiKeys.requirePublishable(publishableKey)
         return createSupabaseClient(projectUrl, publishableKey) {
             httpEngine = OkHttp.create()
+            defaultLogLevel = LogLevel.NONE
             install(Auth) {
                 sessionManager = PreferencesSessionManager(form, projectUrl)
                 codeVerifierCache = MemoryCodeVerifierCache()
