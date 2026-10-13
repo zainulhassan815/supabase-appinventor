@@ -3,6 +3,7 @@ package dev.dreamerslab.supabase
 import com.google.appinventor.components.runtime.Component
 import com.google.appinventor.components.runtime.Form
 import com.google.appinventor.components.runtime.util.ErrorMessages
+import io.github.jan.supabase.auth.exception.AuthRestException
 import io.github.jan.supabase.exceptions.HttpRequestException
 import io.github.jan.supabase.exceptions.RestException
 import io.github.jan.supabase.postgrest.exception.PostgrestRestException
@@ -45,7 +46,8 @@ internal class Requests(
 
     private fun errorCode(error: Throwable) = when (error) {
         is PostgrestRestException -> error.code ?: error.error
-        is RestException -> error.error
+        is AuthRestException -> error.error
+        is RestException -> "http_${error.statusCode}"
         is HttpRequestException -> "network"
         is IllegalArgumentException -> "invalid_argument"
         else -> error::class.simpleName ?: "unknown"
