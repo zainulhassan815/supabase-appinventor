@@ -1,0 +1,50 @@
+(def (p$filter column operator value)
+  (call-component-method 'SupabaseDatabase1 'Filter (*list-for-runtime* column operator value) '(text text any)))
+(def (p$first-id rows)
+  (yail-dictionary-lookup "id" (yail-list-get-item rows 1) "none"))
+
+(define-event Screen1 Initialize()(set-this-form)
+  (call-component-method 'Supabase1 'SignUp
+    (*list-for-runtime* (string-append "e2e" (number->string (java.lang.System:currentTimeMillis)) "@example.com") "secret123" (make-yail-dictionary))
+    '(text text dictionary)))
+
+(define-event Supabase1 SessionChanged($status $user)(set-this-form)
+  ((get-var p$report) (string-append "session " (coerce-to-string (lexical-value $status))))
+  (if (yail-equal? (lexical-value $status) "SignedIn")
+    (call-component-method 'SupabaseDatabase1 'Insert
+      (*list-for-runtime* "insert" "notes" (make-yail-list (make-yail-dictionary (make-dictionary-pair "body" "first")) (make-yail-dictionary (make-dictionary-pair "body" "second, with \"quotes\""))))
+      '(text text any))))
+
+(define-event SupabaseDatabase1 GotRows($tag $rows)(set-this-form)
+  (define tag (lexical-value $tag))
+  (define rows (lexical-value $rows))
+  ((get-var p$report) (string-append tag " " (number->string (yail-list-length rows)) " " (coerce-to-string rows)))
+  (cond
+    ((yail-equal? tag "insert")
+      (call-component-method 'SupabaseDatabase1 'Select
+        (*list-for-runtime* "select" "notes" "id,body" (make-yail-list ((get-var p$filter) "body" "in" (make-yail-list "first" "second, with \"quotes\""))) "id" #f 1 0)
+        '(text text text list text boolean number number)))
+    ((yail-equal? tag "select")
+      (call-component-method 'SupabaseDatabase1 'Count (*list-for-runtime* "count" "notes" (make-yail-list)) '(text text list)))
+    ((yail-equal? tag "update")
+      (call-component-method 'SupabaseDatabase1 'Delete
+        (*list-for-runtime* "delete" "notes" (make-yail-list ((get-var p$filter) "body" "eq" "changed")))
+        '(text text list)))
+    ((yail-equal? tag "delete")
+      (call-component-method 'SupabaseDatabase1 'CallFunction (*list-for-runtime* "rpc" "note_count" (make-yail-dictionary)) '(text text dictionary)))))
+
+(define-event SupabaseDatabase1 GotCount($tag $count)(set-this-form)
+  ((get-var p$report) (string-append "count " (coerce-to-string (lexical-value $count))))
+  (call-component-method 'SupabaseDatabase1 'Update
+    (*list-for-runtime* "update" "notes" (make-yail-dictionary (make-dictionary-pair "body" "changed")) (make-yail-list ((get-var p$filter) "body" "eq" "first")))
+    '(text text dictionary list)))
+
+(define-event SupabaseDatabase1 GotResult($tag $result)(set-this-form)
+  ((get-var p$report) (string-append "rpc " (coerce-to-string (lexical-value $result))))
+  (call-component-method 'SupabaseDatabase1 'Delete (*list-for-runtime* "unfiltered" "notes" (make-yail-list)) '(text text list))
+  (call-component-method 'SupabaseDatabase1 'Select
+    (*list-for-runtime* "missing" "no_such_table" "*" (make-yail-list) "" #t 0 0)
+    '(text text text list text boolean number number)))
+
+(define-event SupabaseDatabase1 Error($tag $operation $code $message)(set-this-form)
+  ((get-var p$report) (string-append "error " (lexical-value $tag) " " (lexical-value $operation) " " (lexical-value $code) " " (lexical-value $message))))

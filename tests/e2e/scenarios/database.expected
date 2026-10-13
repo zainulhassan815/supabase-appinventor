@@ -1,0 +1,10 @@
+session SignedOut
+session SignedIn
+insert 2 \[\{"id":\d+,"user_id":"[0-9a-f-]+","body":"first",.*"body":"second, with \\"quotes\\"",.*\]
+select 1 \[\{"id":\d+,"body":"second, with \\"quotes\\""\}\]
+count 2
+update 1 \[\{.*"body":"changed".*\}\]
+delete 1 \[\{.*"body":"changed".*\}\]
+rpc 1
+error unfiltered Delete invalid_argument .+
+error missing Select PGRST205 .+
