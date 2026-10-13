@@ -134,7 +134,7 @@ channel, with a variable.
 you run `alter table <name> replica identity full;`.
 
 **Can I sign in with Google, GitHub or a magic link?** Not yet. Browser-based sign-in is
-next on the [roadmap](ROADMAP.md).
+planned for v1.2; see the [roadmap](ROADMAP.md).
 
 ## Building
 
