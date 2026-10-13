@@ -44,7 +44,7 @@ homepage: https://github.com/zainulhassan815/supabase-appinventor
 
 # Path to the license file of your extension. This should be a path to a local
 # file or link to something hosted online.
-#license: LICENSE.txt
+license: LICENSE
 
 # Similar to dependencies, except libraries defined as provided are not included
 # in the final AIX. This is useful when you want to use a library in your
