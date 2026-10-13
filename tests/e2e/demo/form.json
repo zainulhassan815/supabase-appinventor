@@ -1,0 +1,32 @@
+[
+  {"name": "Supabase1", "type": "Supabase", "properties": {"ProjectUrl": "{{url}}", "PublishableKey": "{{key}}"}},
+  {"name": "Notes", "type": "SupabaseDatabase", "properties": {"Client": "@Supabase1"}},
+  {"name": "Photos", "type": "SupabaseStorage", "properties": {"Client": "@Supabase1", "Bucket": "uploads"}},
+  {"name": "Live", "type": "SupabaseChannel", "properties": {"Client": "@Supabase1", "Topic": "notes", "ReceiveOwnBroadcasts": false}},
+  {"name": "Stats", "type": "SupabaseFunctions", "properties": {"Client": "@Supabase1"}},
+  {"name": "Main", "type": "VerticalArrangement", "properties": {"Width": -2}, "children": [
+    {"name": "StatusLabel", "type": "Label", "properties": {"Text": "Signed out", "FontSize": 18}},
+    {"name": "AuthRow", "type": "HorizontalArrangement", "properties": {"Width": -2}, "children": [
+      {"name": "EmailBox", "type": "TextBox", "properties": {"Hint": "Email", "Width": -2}},
+      {"name": "PasswordBox", "type": "PasswordTextBox", "properties": {"Hint": "Password", "Width": -2}}
+    ]},
+    {"name": "AuthButtons", "type": "HorizontalArrangement", "children": [
+      {"name": "SignUpButton", "type": "Button", "properties": {"Text": "Sign up"}},
+      {"name": "SignInButton", "type": "Button", "properties": {"Text": "Sign in"}},
+      {"name": "SignOutButton", "type": "Button", "properties": {"Text": "Sign out"}}
+    ]},
+    {"name": "NoteRow", "type": "HorizontalArrangement", "properties": {"Width": -2}, "children": [
+      {"name": "NoteBox", "type": "TextBox", "properties": {"Hint": "New note", "Width": -2}},
+      {"name": "AddButton", "type": "Button", "properties": {"Text": "Add"}}
+    ]},
+    {"name": "ActionRow", "type": "HorizontalArrangement", "children": [
+      {"name": "StatsButton", "type": "Button", "properties": {"Text": "Stats"}},
+      {"name": "PhotoButton", "type": "Button", "properties": {"Text": "Attach photo"}}
+    ]},
+    {"name": "OnlineLabel", "type": "Label", "properties": {"Text": ""}},
+    {"name": "TypingLabel", "type": "Label", "properties": {"Text": ""}},
+    {"name": "InfoLabel", "type": "Label", "properties": {"Text": ""}},
+    {"name": "NotesList", "type": "ListView", "properties": {"Width": -2}},
+    {"name": "PhotoImage", "type": "Image", "properties": {"Width": 240, "Height": 160}}
+  ]}
+]

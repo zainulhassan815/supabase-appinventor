@@ -1,0 +1,166 @@
+(def g$notes (make-yail-list))
+(def g$online (make-yail-dictionary))
+(def g$email "")
+(def g$listening #f)
+(def g$subscribed #f)
+
+(def (p$show text) (set-and-coerce-property! 'InfoLabel 'Text text 'text))
+
+(def (p$filter column operator value)
+  (call-component-method 'Notes 'Filter (*list-for-runtime* column operator value) '(text text any)))
+
+(def (p$without id)
+  (let loop ((rest (yail-list->kawa-list (get-var g$notes))) (kept '()))
+    (cond ((null? rest) (reverse kept))
+          ((yail-equal? (yail-dictionary-lookup "id" (car rest) "") id) (loop (cdr rest) kept))
+          (else (loop (cdr rest) (cons (car rest) kept))))))
+
+(def (p$render)
+  (set-and-coerce-property! 'NotesList 'Elements
+    (kawa-list->yail-list (map (lambda (note) (yail-dictionary-lookup "body" note "")) (yail-list->kawa-list (get-var g$notes))))
+    'list))
+
+(def (p$put note)
+  (let* ((id (yail-dictionary-lookup "id" note ""))
+         (notes (yail-list->kawa-list (get-var g$notes)))
+         (known (not (= (length ((get-var p$without) id)) (length notes)))))
+    (set-var! g$notes (kawa-list->yail-list
+      (if known
+        (map (lambda (other) (if (yail-equal? (yail-dictionary-lookup "id" other "") id) note other)) notes)
+        (append notes (list note)))))
+    ((get-var p$render))))
+
+(def (p$remove id)
+  (set-var! g$notes (kawa-list->yail-list ((get-var p$without) id)))
+  ((get-var p$render)))
+
+(def (p$show-online)
+  (set-and-coerce-property! 'OnlineLabel 'Text
+    (string-append (number->string (yail-dictionary-length (get-var g$online))) " online") 'text))
+
+(define-event SignUpButton Click()(set-this-form)
+  (call-component-method 'Supabase1 'SignUp
+    (*list-for-runtime* (get-property 'EmailBox 'Text) (get-property 'PasswordBox 'Text) (make-yail-dictionary))
+    '(text text dictionary)))
+
+(define-event SignInButton Click()(set-this-form)
+  (call-component-method 'Supabase1 'SignIn
+    (*list-for-runtime* (get-property 'EmailBox 'Text) (get-property 'PasswordBox 'Text)) '(text text)))
+
+(define-event SignOutButton Click()(set-this-form)
+  (call-component-method 'Supabase1 'SignOut (*list-for-runtime*) '()))
+
+(define-event Supabase1 SessionChanged($status $user)(set-this-form)
+  (if (yail-equal? (coerce-to-string (lexical-value $status)) "SignedIn")
+    (let ((email (yail-dictionary-lookup "email" (lexical-value $user) "")))
+      (set-var! g$email (if (yail-equal? email "") "anonymous" email))
+      (set-and-coerce-property! 'StatusLabel 'Text (string-append "Signed in as " (get-var g$email)) 'text)
+      (call-component-method 'Notes 'Select
+        (*list-for-runtime* "load" "notes" "id,body" (make-yail-list) "id" #t 0 0)
+        '(text text text list text boolean number number))
+      (unless (get-var g$listening)
+        (set-var! g$listening #t)
+        (call-component-method 'Live 'ListenToTable (*list-for-runtime* "public" "notes" "*" "") '(text text text any))
+        (call-component-method 'Live 'ListenToBroadcast (*list-for-runtime* "typing") '(text)))
+      (unless (get-var g$subscribed)
+        (set-var! g$subscribed #t)
+        (set-and-coerce-property! 'Live 'PresenceKey (yail-dictionary-lookup "id" (lexical-value $user) "") 'text)
+        (call-component-method 'Live 'Subscribe (*list-for-runtime*) '())))
+    (begin
+      (set-and-coerce-property! 'StatusLabel 'Text "Signed out" 'text)
+      (set-var! g$notes (make-yail-list))
+      (set-var! g$online (make-yail-dictionary))
+      ((get-var p$render))
+      (set-and-coerce-property! 'OnlineLabel 'Text "" 'text)
+      (set-and-coerce-property! 'TypingLabel 'Text "" 'text)
+      (when (get-var g$subscribed)
+        (set-var! g$subscribed #f)
+        (call-component-method 'Live 'Unsubscribe (*list-for-runtime*) '())))))
+
+(define-event AddButton Click()(set-this-form)
+  (let ((body (get-property 'NoteBox 'Text)))
+    (unless (yail-equal? body "")
+      (call-component-method 'Notes 'Insert
+        (*list-for-runtime* "add" "notes" (make-yail-dictionary (make-dictionary-pair "body" body)))
+        '(text text any)))))
+
+(define-event NotesList AfterPicking()(set-this-form)
+  (let ((note (yail-list-get-item (get-var g$notes) (get-property 'NotesList 'SelectionIndex))))
+    (call-component-method 'Notes 'Delete
+      (*list-for-runtime* "delete" "notes" (make-yail-list ((get-var p$filter) "id" "eq" (yail-dictionary-lookup "id" note 0))))
+      '(text text list))))
+
+(define-event Notes GotRows($tag $rows)(set-this-form)
+  (let ((tag (lexical-value $tag)) (rows (yail-list->kawa-list (lexical-value $rows))))
+    (cond
+      ((yail-equal? tag "load")
+        (set-var! g$notes (lexical-value $rows))
+        ((get-var p$render)))
+      ((yail-equal? tag "add")
+        (set-and-coerce-property! 'NoteBox 'Text "" 'text)
+        (for-each (get-var p$put) rows))
+      ((yail-equal? tag "delete")
+        (for-each (lambda (note) ((get-var p$remove) (yail-dictionary-lookup "id" note ""))) rows)))))
+
+(define-event Live ChangeReceived($table $event $record $oldRecord)(set-this-form)
+  (if (yail-equal? (coerce-to-string (lexical-value $event)) "DELETE")
+    ((get-var p$remove) (yail-dictionary-lookup "id" (lexical-value $oldRecord) ""))
+    ((get-var p$put) (lexical-value $record))))
+
+(define-event Live StatusChanged($status)(set-this-form)
+  (when (yail-equal? (coerce-to-string (lexical-value $status)) "Subscribed")
+    (call-component-method 'Live 'Track
+      (*list-for-runtime* (make-yail-dictionary (make-dictionary-pair "email" (get-var g$email)))) '(dictionary))))
+
+(define-event Live PresenceChanged($joins $leaves)(set-this-form)
+  (for-each (lambda (key) (yail-dictionary-set-pair key (get-var g$online) #t))
+    (yail-list->kawa-list (yail-dictionary-get-keys (lexical-value $joins))))
+  (for-each (lambda (key) (yail-dictionary-delete-pair (get-var g$online) key))
+    (yail-list->kawa-list (yail-dictionary-get-keys (lexical-value $leaves))))
+  ((get-var p$show-online)))
+
+(define-event NoteBox TextChanged()(set-this-form)
+  (when (and (get-var g$subscribed) (= 1 (string-length (get-property 'NoteBox 'Text))))
+    (call-component-method 'Live 'Broadcast
+      (*list-for-runtime* "typing" (make-yail-dictionary (make-dictionary-pair "who" (get-var g$email)))) '(text dictionary))))
+
+(define-event Live BroadcastReceived($event $payload)(set-this-form)
+  (set-and-coerce-property! 'TypingLabel 'Text
+    (string-append (yail-dictionary-lookup "who" (lexical-value $payload) "Someone") " is typing...") 'text))
+
+(define-event StatsButton Click()(set-this-form)
+  (call-component-method 'Stats 'Invoke
+    (*list-for-runtime* "stats" "note-stats"
+      (make-yail-dictionary (make-dictionary-pair "notes"
+        (kawa-list->yail-list (map (lambda (note) (yail-dictionary-lookup "body" note "")) (yail-list->kawa-list (get-var g$notes))))))
+      (make-yail-dictionary) "POST")
+    '(text text any dictionary text)))
+
+(define-event Stats GotResponse($tag $status $body)(set-this-form)
+  ((get-var p$show) (string-append
+    (coerce-to-string (yail-dictionary-lookup "count" (lexical-value $body) 0)) " notes, "
+    (coerce-to-string (yail-dictionary-lookup "words" (lexical-value $body) 0)) " words")))
+
+(define-event PhotoButton Click()(set-this-form)
+  (let ((id (yail-dictionary-lookup "id" (get-property 'Supabase1 'CurrentUser) "")))
+    (call-component-method 'Photos 'Upload
+      (*list-for-runtime* "photo" (string-append id "/photo.png") "//photo.png" "" #t)
+      '(text text text text boolean))))
+
+(define-event Photos Uploaded($tag $path)(set-this-form)
+  (call-component-method 'Photos 'SignedUrl (*list-for-runtime* "photo" (lexical-value $path) 3600) '(text text number)))
+
+(define-event Photos GotSignedUrl($tag $path $url)(set-this-form)
+  (set-and-coerce-property! 'PhotoImage 'Picture (lexical-value $url) 'text)
+  ((get-var p$show) "Photo uploaded"))
+
+(define-event Supabase1 Error($operation $code $message)(set-this-form)
+  ((get-var p$show) (string-append "Error: " (lexical-value $message))))
+(define-event Notes Error($tag $operation $code $message)(set-this-form)
+  ((get-var p$show) (string-append "Error: " (lexical-value $message))))
+(define-event Photos Error($tag $operation $code $message)(set-this-form)
+  ((get-var p$show) (string-append "Error: " (lexical-value $message))))
+(define-event Live Error($operation $code $message)(set-this-form)
+  ((get-var p$show) (string-append "Error: " (lexical-value $message))))
+(define-event Stats Error($tag $operation $code $message)(set-this-form)
+  ((get-var p$show) (string-append "Error: " (lexical-value $message))))
