@@ -1,5 +1,7 @@
 package dev.dreamerslab.supabase
 
+import android.os.Handler
+import android.os.Looper
 import com.google.appinventor.components.annotations.DesignerProperty
 import com.google.appinventor.components.annotations.Options
 import com.google.appinventor.components.annotations.Extension
@@ -12,6 +14,7 @@ import com.google.appinventor.components.runtime.Component
 import com.google.appinventor.components.runtime.ComponentContainer
 import com.google.appinventor.components.runtime.EventDispatcher
 import com.google.appinventor.components.runtime.OnDestroyListener
+import com.google.appinventor.components.runtime.ReplForm
 import com.google.appinventor.components.runtime.util.OnInitializeListener
 import com.google.appinventor.components.runtime.util.YailDictionary
 import dev.dreamerslab.supabase.helpers.SessionStatus
@@ -47,7 +50,7 @@ class Supabase(container: ComponentContainer) : AndroidNonvisibleComponent(conta
     private var connection: SupabaseClient? = null
 
     init {
-        form.registerForOnInitialize(this)
+        if (form is ReplForm) Handler(Looper.getMainLooper()).post(::restoreSession) else form.registerForOnInitialize(this)
         form.registerForOnDestroy(this)
     }
 
