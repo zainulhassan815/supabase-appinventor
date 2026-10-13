@@ -3,3 +3,5 @@
 /.classpath
 /.idea/libraries/
 /.e2e
+/tests/e2e/blocks/node_modules
+__pycache__/
