@@ -62,7 +62,7 @@
     <field name="NAME">loadNotes</field>
     <statement name="STACK">
       <block type="component_method" id="9hx*IkKh.wpVeq9iO(XA">
-        <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="SupabaseDatabase" method_name="Select" is_generic="false" instance_name="Notes"></mutation>
+        <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="SupabaseDatabase" method_name="Query" is_generic="false" instance_name="Notes"></mutation>
         <field name="COMPONENT_SELECTOR">Notes</field>
         <value name="ARG0">
           <block type="text" id="m7jvPbdu}#FwzRX+A$[m">
@@ -75,33 +75,38 @@
           </block>
         </value>
         <value name="ARG2">
-          <block type="text" id="v%Vp#CS7Yrrz/:Cd[El%">
-            <field name="TEXT">id,body</field>
-          </block>
-        </value>
-        <value name="ARG3">
-          <block type="lists_create_with" id="Ss+m%e.MTj6R`qEM)l|U">
-            <mutation xmlns="http://www.w3.org/1999/xhtml" items="0"></mutation>
-          </block>
-        </value>
-        <value name="ARG4">
-          <block type="text" id="r6QX^zl%/dMUB:c3GXK0">
-            <field name="TEXT">id</field>
-          </block>
-        </value>
-        <value name="ARG5">
-          <block type="logic_boolean" id="Cz^Ad%i#iQb9z%21%mJK">
-            <field name="BOOL">TRUE</field>
-          </block>
-        </value>
-        <value name="ARG6">
-          <block type="math_number" id="EmkOw|jm8Fyha1$r*v*1">
-            <field name="NUM">0</field>
-          </block>
-        </value>
-        <value name="ARG7">
-          <block type="math_number" id="e6~KsmfCK:(RxaHx=F?^">
-            <field name="NUM">0</field>
+          <block type="dictionaries_create_with" id="lnQueryDictionary">
+            <mutation xmlns="http://www.w3.org/1999/xhtml" items="2"></mutation>
+            <value name="ADD0">
+              <block type="pair" id="lnQueryPair0">
+                <value name="KEY">
+                  <block type="helpers_dropdown" id="lnQueryColumnsKey">
+                    <mutation xmlns="http://www.w3.org/1999/xhtml" key="QueryField"></mutation>
+                    <field name="OPTION">Columns</field>
+                  </block>
+                </value>
+                <value name="VALUE">
+                  <block type="text" id="v%Vp#CS7Yrrz/:Cd[El%">
+                    <field name="TEXT">id,body</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <value name="ADD1">
+              <block type="pair" id="lnQueryPair1">
+                <value name="KEY">
+                  <block type="helpers_dropdown" id="lnQueryOrderKey">
+                    <mutation xmlns="http://www.w3.org/1999/xhtml" key="QueryField"></mutation>
+                    <field name="OPTION">OrderBy</field>
+                  </block>
+                </value>
+                <value name="VALUE">
+                  <block type="text" id="r6QX^zl%/dMUB:c3GXK0">
+                    <field name="TEXT">id</field>
+                  </block>
+                </value>
+              </block>
+            </value>
           </block>
         </value>
       </block>
