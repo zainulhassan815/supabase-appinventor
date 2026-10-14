@@ -121,7 +121,7 @@ class Laptop:
 
     def broadcast_typing(self):
         self.call('POST', '/realtime/v1/api/broadcast', {'messages': [
-            {'topic': 'notes', 'event': 'typing', 'payload': {'who': 'laptop'}, 'private': False}]})
+            {'topic': 'notes', 'event': 'typing', 'payload': {'who': 'laptop'}, 'private': True}]})
 
 
 def main(package, url, key, shots):

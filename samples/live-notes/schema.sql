@@ -31,6 +31,14 @@ begin
   end if;
 end $$;
 
+drop policy if exists "Signed-in users join the notes channel" on realtime.messages;
+drop policy if exists "Signed-in users send on the notes channel" on realtime.messages;
+
+create policy "Signed-in users join the notes channel" on realtime.messages
+  for select to authenticated using ((select realtime.topic()) = 'notes');
+create policy "Signed-in users send on the notes channel" on realtime.messages
+  for insert to authenticated with check ((select realtime.topic()) = 'notes');
+
 insert into storage.buckets (id, name, public)
 values ('uploads', 'uploads', false)
 on conflict (id) do nothing;
