@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased (1.1.0)
+## 1.1.0 (2026-10-14)
 
 - **Supabase:** `UpdateUser` changes the email, password or metadata, and turns an anonymous user into a full account (`UserUpdated`). `ResendConfirmation` and `Reauthenticate` send their emails (`MessageSent`).
 - **SupabaseDatabase:** `Query` and `QueryPage` take the query as a dictionary with keys from the `QueryField` dropdown, checked before it's sent, with errors that say where the mistake is. `QueryPage` also returns the total count (`GotPage`). `OrderBy` takes several columns, each with `asc` or `desc`. `SetQueryField`, `InsertOrSkip`, and the `Schema` property for tables outside `public`. `Select` is deprecated: hidden from the drawer, still working in existing projects.
