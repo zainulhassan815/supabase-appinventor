@@ -3,12 +3,12 @@ const path = require('path');
 const { open } = require('./editor');
 
 const USAGE = 'usage: images.js <appinventor-dir> <Screen.scm> <Screen.bky> <components.json> <out-dir> ' +
-  '<Component.Event | procedure:name>...';
+  '<block id | Component.Event | procedure:name>...';
 
 function find(name) {
   const workspace = Blockly.common.getMainWorkspace();
   const [component, event] = name.split('.');
-  const block = workspace.getTopBlocks(false).find(b => name.startsWith('procedure:')
+  const block = workspace.getBlockById(name) || workspace.getTopBlocks(false).find(b => name.startsWith('procedure:')
     ? b.type === 'procedures_defnoreturn' && b.getFieldValue('NAME') === name.slice('procedure:'.length)
     : b.type === 'component_event' && b.instanceName === component && b.eventName === event);
   if (!block) return false;
