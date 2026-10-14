@@ -34,8 +34,10 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.JsonObject
 
@@ -52,6 +54,7 @@ class SupabaseChannel(container: ComponentContainer) : AndroidNonvisibleComponen
     private var topic = ""
     private var receiveOwnBroadcasts = true
     private var presenceKey = ""
+    private var isPrivate = false
     private var channel: RealtimeChannel? = null
     private var channelScope: CoroutineScope? = null
 
@@ -94,6 +97,16 @@ class SupabaseChannel(container: ComponentContainer) : AndroidNonvisibleComponen
     @SimpleProperty
     fun PresenceKey(key: String) {
         presenceKey = key.trim()
+    }
+
+    @SimpleProperty(description = "Whether only users allowed by the project's policies on realtime.messages " +
+        "may join the channel, send broadcasts and track presence. Set it before Subscribe.")
+    fun Private() = isPrivate
+
+    @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_BOOLEAN, defaultValue = "False")
+    @SimpleProperty
+    fun Private(private: Boolean) {
+        isPrivate = private
     }
 
     @SimpleProperty(description = "Whether the channel is subscribed.")
@@ -144,11 +157,18 @@ class SupabaseChannel(container: ComponentContainer) : AndroidNonvisibleComponen
         requireUnsubscribed()
         require(topic.isNotBlank()) { "Set the Topic property" }
         val created = client().channel(topic) {
+            isPrivate = this@SupabaseChannel.isPrivate
             broadcast { receiveOwnBroadcasts = this@SupabaseChannel.receiveOwnBroadcasts }
             if (presenceKey.isNotBlank()) presence { key = presenceKey }
         }
         val scope = CoroutineScope(requests.scope.coroutineContext + Job(requests.scope.coroutineContext[Job]))
         created.status.drop(1).mapNotNull(::channelStatus).onEach { StatusChanged(it.toUnderlyingValue()) }.launchNow(scope)
+        scope.launch(start = CoroutineStart.UNDISPATCHED) {
+            val leftBeforeJoining = created.status.drop(1)
+                .takeWhile { it != RealtimeChannel.Status.SUBSCRIBED }
+                .firstOrNull { it == RealtimeChannel.Status.UNSUBSCRIBING || it == RealtimeChannel.Status.UNSUBSCRIBED }
+            if (leftBeforeJoining != null) requests.launch("Subscribe") { refused(created) }
+        }
         created.presenceChangeFlow()
             .onEach { PresenceChanged(presences(it.joins), presences(it.leaves)) }
             .launchNow(scope)
@@ -219,6 +239,20 @@ class SupabaseChannel(container: ComponentContainer) : AndroidNonvisibleComponen
     private fun subscribed() = requireNotNull(channel) { "Subscribe first" }
 
     private fun requireUnsubscribed() = require(channel == null) { "Unsubscribe first" }
+
+    private suspend fun refused(current: RealtimeChannel) {
+        if (channel !== current) return
+        closeChannel(current)
+        StatusChanged(ChannelStatus.Unsubscribed.toUnderlyingValue())
+        throw CodedException(
+            "channel_refused",
+            "The server refused to join $topic. " + if (isPrivate) {
+                "Add policies on realtime.messages that let this user in."
+            } else {
+                "The session may have expired."
+            },
+        )
+    }
 
     private fun <T> Flow<T>.launchNow(scope: CoroutineScope) = scope.launch(start = CoroutineStart.UNDISPATCHED) { collect() }
 

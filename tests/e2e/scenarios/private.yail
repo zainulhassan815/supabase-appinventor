@@ -1,0 +1,34 @@
+(def (p$channel method args types) (call-component-method 'SupabaseChannel1 method args types))
+(def (p$subscribe topic)
+  (set-and-coerce-property! 'SupabaseChannel1 'Topic topic 'text)
+  ((get-var p$channel) 'Subscribe (*list-for-runtime*) '()))
+
+(define-event Screen1 Initialize()(set-this-form)
+  (call-component-method 'Supabase1 'SignUp
+    (*list-for-runtime* (string-append "e2e" (number->string (java.lang.System:currentTimeMillis)) "@example.com") "secret123" (make-yail-dictionary))
+    '(text text dictionary)))
+
+(define-event Supabase1 SessionChanged($status $user)(set-this-form)
+  (when (yail-equal? (lexical-value $status) "SignedIn")
+    (set-and-coerce-property! 'SupabaseChannel1 'Private #t 'boolean)
+    ((get-var p$report) (string-append "private " (coerce-to-string (get-property 'SupabaseChannel1 'Private))))
+    ((get-var p$channel) 'ListenToBroadcast (*list-for-runtime* "ping") '(text))
+    ((get-var p$subscribe) "e2e-private")))
+
+(define-event SupabaseChannel1 StatusChanged($status)(set-this-form)
+  ((get-var p$report) (string-append "status " (coerce-to-string (lexical-value $status))))
+  (when (and (yail-equal? (lexical-value $status) "Subscribed") (yail-equal? (get-property 'SupabaseChannel1 'Topic) "e2e-private"))
+    ((get-var p$channel) 'Track (*list-for-runtime* (make-yail-dictionary (make-dictionary-pair "status" "online"))) '(dictionary))
+    ((get-var p$channel) 'Broadcast (*list-for-runtime* "ping" (make-yail-dictionary (make-dictionary-pair "n" 1))) '(text dictionary))))
+
+(define-event SupabaseChannel1 PresenceChanged($joins $leaves)(set-this-form)
+  ((get-var p$report) (string-append "presence " (coerce-to-string (yail-dictionary-get-keys (lexical-value $joins))))))
+
+(define-event SupabaseChannel1 BroadcastReceived($event $payload)(set-this-form)
+  ((get-var p$report) (string-append "broadcast " (lexical-value $event) " " (coerce-to-string (lexical-value $payload))))
+  ((get-var p$channel) 'Unsubscribe (*list-for-runtime*) '())
+  ((get-var p$subscribe) "e2e-forbidden"))
+
+(define-event SupabaseChannel1 Error($operation $code $message)(set-this-form)
+  ((get-var p$report) (string-append "error " (lexical-value $operation) " " (lexical-value $code) " " (lexical-value $message)))
+  ((get-var p$report) (string-append "subscribed " (coerce-to-string (get-property 'SupabaseChannel1 'IsSubscribed)))))

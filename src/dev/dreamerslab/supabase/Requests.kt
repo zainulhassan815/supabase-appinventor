@@ -14,6 +14,8 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
+internal class CodedException(val code: String, message: String) : Exception(message)
+
 internal class Requests(
     private val form: Form,
     private val component: Component,
@@ -53,6 +55,7 @@ internal class Requests(
     fun close() = scope.cancel()
 
     private fun errorCode(error: Throwable) = when (error) {
+        is CodedException -> error.code
         is PostgrestRestException -> error.code ?: error.error
         is AuthRestException -> error.error
         is RestException -> "http_${error.statusCode}"

@@ -1,0 +1,11 @@
+private true
+status Subscribing
+status Subscribed
+presence \[\]
+presence \["tester"\]
+broadcast ping \{"n":1\}
+status Unsubscribed
+status Subscribing
+status Unsubscribed
+error Subscribe channel_refused The server refused to join e2e-forbidden\. Add policies on realtime\.messages that let this user in\.
+subscribed false
