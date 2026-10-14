@@ -15,6 +15,7 @@ import com.google.appinventor.components.runtime.util.YailDictionary
 import com.google.appinventor.components.runtime.util.YailList
 import dev.dreamerslab.supabase.helpers.ChangeEvent
 import dev.dreamerslab.supabase.helpers.ChannelStatus
+import io.github.jan.supabase.annotations.SupabaseInternal
 import io.github.jan.supabase.realtime.HasOldRecord
 import io.github.jan.supabase.realtime.HasRecord
 import io.github.jan.supabase.realtime.PostgresAction
@@ -95,6 +96,11 @@ class SupabaseChannel(container: ComponentContainer) : AndroidNonvisibleComponen
 
     @SimpleProperty(description = "Whether the channel is subscribed.")
     fun IsSubscribed() = channel?.status?.value == RealtimeChannel.Status.SUBSCRIBED
+
+    @OptIn(SupabaseInternal::class)
+    @SimpleProperty(description = "Everyone on the channel right now, as a dictionary from presence key to " +
+        "tracked state. Empty until the channel is subscribed.")
+    fun PresenceState(): YailDictionary = presences(channel?.callbackManager?.presenceState().orEmpty())
 
     @SimpleFunction(description = "Receives changes to a table through ChangeReceived. Call it before Subscribe. " +
         "Filter is empty, or one filter from SupabaseDatabase's Filter block (Equals, NotEquals, GreaterThan, " +

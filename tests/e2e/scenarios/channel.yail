@@ -31,6 +31,7 @@
 (define-event SupabaseChannel1 PresenceChanged($joins $leaves)(set-this-form)
   (unless (and (= 0 (yail-dictionary-length (lexical-value $joins))) (= 0 (yail-dictionary-length (lexical-value $leaves))))
     ((get-var p$report) (string-append "presence joins " ((get-var p$keys) (lexical-value $joins)) " leaves " ((get-var p$keys) (lexical-value $leaves))))
+    ((get-var p$report) (string-append "presence state " (coerce-to-string (get-property 'SupabaseChannel1 'PresenceState))))
     (when (> (yail-dictionary-length (lexical-value $leaves)) 0)
       (call-component-method 'SupabaseChannel1 'Unsubscribe (*list-for-runtime*) '()))))
 

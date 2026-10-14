@@ -2,10 +2,12 @@
 status Subscribing
 status Subscribed
 presence joins \["tester"\] leaves \[\]
+presence state \{"tester":\{"status":"online"\}\}
 broadcast ping \{"n":1\}
 insert 2
 change notes INSERT realtime
 delete 1
 change notes DELETE old \["id"\]
 presence joins \[\] leaves \["tester"\]
+presence state \{\}
 status Unsubscribed
