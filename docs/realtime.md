@@ -70,6 +70,11 @@ alter table public.todos replica identity full;
 
 A simple way to stay in sync is to reload with `Query` whenever a change arrives.
 
+Changes made before the channel is subscribed don't arrive, and when the realtime
+server has just started, changes made in the first seconds after `Subscribed` can
+be missed too. Load the data with `Query` once `StatusChanged` reports
+`Subscribed`, so nothing made in between is lost.
+
 ## Broadcast
 
 `Broadcast(event, payload)` sends a dictionary to everyone on the channel, and
