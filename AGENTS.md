@@ -33,7 +33,8 @@ and the limits App Inventor imposes.
   `Screen.Initialize`.
 - supabase-kt's `-jvm` artifacts only, with kotlin-reflect kept out. Use the
   reified postgrest overloads with `JsonObject` or `List<JsonObject>`.
-- `samples/live-notes/schema.sql` is the one schema: users run it, and the local
-  backend seeds from it.
+- `samples/live-notes/schema.sql` is the one schema users run; the local backend
+  seeds from it and from `tests/e2e/schema.sql`, which holds tables only the tests
+  use.
 - Verify changes with the device tests in `docs/testing.md`, not only
   `rush build`.

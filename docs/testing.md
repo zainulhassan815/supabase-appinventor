@@ -7,14 +7,16 @@ them on a device or emulator against a local Supabase.
 
 - [Supabase CLI](https://supabase.com/docs/guides/cli) and Docker. Run
   `supabase start` in the repository: it seeds the database from
-  `samples/live-notes/schema.sql` and serves the functions in `supabase/functions`.
+  `samples/live-notes/schema.sql` and `tests/e2e/schema.sql` (tables only the tests
+  use), and serves the functions in `supabase/functions`.
 - A checkout of [rush-cli](https://github.com/zainulhassan815/rush-cli) next to this
   repository (or `RUSH_CLI`), whose `tool/e2e/buildserver.sh` builds App Inventor's
   build server once. Its blocks editor must also be built for the sample test:
   `ant -f blocklyeditor/build.xml BlocklyTestbed` in that App Inventor checkout.
 - JDK 11, Node.js, and `npm install` in `tests/e2e/blocks`.
 - A device or emulator on `adb`. Tests reach the local backend through
-  `adb reverse`.
+  `adb reverse`. Set `ADB` to use another adb, and `SUPABASE_KEY` if
+  `supabase status` can't be read.
 
 ## Scenarios
 
@@ -24,7 +26,8 @@ tests/e2e/run.sh tests/e2e/scenarios/database.yail
 
 A scenario is a screen's YAIL. It reports lines into a Label, which are matched
 against the scenario's `.expected` patterns (`!unordered` on the first line allows
-any order). `database`, `storage`, `channel` and `functions` cover each component.
+any order). `auth`, `database`, `storage`, `channel` and `functions` cover each
+component.
 
 ## The sample
 

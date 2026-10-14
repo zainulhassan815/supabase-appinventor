@@ -9,19 +9,51 @@ requests apart.
 
 ## Reading
 
-`Select(tag, table, columns, filters, orderBy, ascending, limit, offset)` →
-`GotRows(tag, rows)`
+`Query(tag, table, query)` → `GotRows(tag, rows)`
 
-- `columns`: comma-separated names, or `*` for all. Related tables work with
-  PostgREST's syntax, for example `id,title,author(name)`.
-- `filters`: a list of filters made with the `Filter` block, all of which must
-  match. An empty list returns every row the user may see.
-- `orderBy`: a column, or empty to keep the database's order.
-- `limit`: how many rows; `0` for no limit. `offset` skips rows, for pages.
+`query` is a dictionary that describes what to read. Make it with the
+**make a dictionary** block, and take its keys from the **QueryField** dropdown, so
+they can't be misspelled. Every key is optional: an empty dictionary reads every row
+the user may see.
+
+| QueryField | Value |
+|---|---|
+| `Columns` | Comma-separated names. Related tables work with PostgREST's syntax, for example `id,title,author(name)`. All columns when left out. |
+| `Filters` | A list of filters made with the `Filter` block, all of which must match. |
+| `OrderBy` | A column, or several separated by commas, each optionally followed by `asc` or `desc`: `done, created_at desc`. |
+| `Limit` | How many rows at most. |
+| `Offset` | How many rows to skip first, for pages. |
 
 `rows` is a list of dictionaries, one per row.
 
-`Count(tag, table, filters)` → `GotCount(tag, count)`
+The extension checks the whole query before sending it. A mistake fires `Error`
+with the code `invalid_argument` and the place it was found, such as
+`query.filters[1]: Each filter is a list of column, operator and value` or
+`query: "limt" isn't a QueryField`. Text keys work too, so a query decoded from
+JSON (`{"orderBy": "id", "limit": 20}`) can be passed as it is.
+
+`SetQueryField(query, field, value)` sets one key of a query and checks its value
+right away.
+
+### Pages
+
+`QueryPage(tag, table, query)` → `GotPage(tag, rows, total)` reads one page like
+`Query`, and also counts every row that matches the filters, so the app can show
+"page 2 of 7". Use `Limit` for the page size and `Offset` for where it starts.
+
+`Count(tag, table, filters)` → `GotCount(tag, count)` only counts.
+
+### Other schemas
+
+Tables and functions live in the `public` schema unless the `Schema` property
+says otherwise. Other schemas must be added to **Exposed schemas** in the
+project's API settings.
+
+### Select
+
+Projects made with version 1.0 use `Select(tag, table, columns, filters, orderBy,
+ascending, limit, offset)`. It keeps working, but it's hidden from the blocks
+drawer: use `Query` in new projects.
 
 ## Filters
 
@@ -44,6 +76,7 @@ dropdown has:
 |---|---|
 | `Insert(tag, table, rows)` | `GotRows(tag, rows)` with the added rows, including values the database filled in, such as `id` |
 | `Upsert(tag, table, rows, onConflict)` | Adds rows, or updates the ones that exist. `onConflict` lists the unique columns that identify a row; empty for the primary key. |
+| `InsertOrSkip(tag, table, rows, onConflict)` | Adds rows and skips the ones that already exist. `GotRows` has only the added rows. |
 | `Update(tag, table, values, filters)` | `GotRows` with the changed rows. `values` is a dictionary of columns and new values. |
 | `Delete(tag, table, filters)` | `GotRows` with the deleted rows |
 

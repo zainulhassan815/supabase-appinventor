@@ -64,9 +64,9 @@ Sign in, then load the user's todos:
 - **when SignInButton.Click:** call `Supabase1.SignIn` with `EmailBox.Text` and
   `PasswordBox.Text`. (Use `SignUp` once to create the account.)
 - **when Supabase1.SessionChanged (status, user):** if `status` = `SignedIn`
-  (from the SessionStatus dropdown), call `SupabaseDatabase1.Select` with tag
-  `"load"`, table `"todos"`, columns `"*"`, filters an empty list, orderBy `"id"`,
-  ascending `true`, limit `0`, offset `0`.
+  (from the SessionStatus dropdown), call `SupabaseDatabase1.Query` with tag
+  `"load"`, table `"todos"`, and as query a **make a dictionary** block with one
+  pair: key `QueryField.OrderBy` (from the QueryField dropdown), value `"id"`.
 - **when SupabaseDatabase1.GotRows (tag, rows):** if `tag` = `"load"`, set
   `ListView1.Elements` to a list made by mapping each row to
   `look up "title" in row`.
@@ -75,7 +75,7 @@ Add a todo and reload:
 
 - **when AddButton.Click:** call `SupabaseDatabase1.Insert` with tag `"add"`,
   table `"todos"`, and rows set to a dictionary with `title` = `TitleBox.Text`.
-- In **GotRows**, when `tag` = `"add"`, call `Select` again.
+- In **GotRows**, when `tag` = `"add"`, call `Query` again.
 
 Show problems:
 

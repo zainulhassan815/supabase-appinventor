@@ -23,6 +23,25 @@ run as that user and row-level security applies.
 | `SignInAnonymously()` | `SessionChanged(SignedIn, user)`. Anonymous sign-ins must be enabled in the project. |
 | `SignOut()` | `SessionChanged(SignedOut, …)` |
 
+## Changing the account
+
+| Block | Result |
+|---|---|
+| `UpdateUser(email, password, metadata, code)` | `UserUpdated(user)`. Leave `email` or `password` empty, or `metadata` an empty dictionary, to keep them; `metadata` is merged into the saved metadata. |
+| `ResendConfirmation(email)` | `MessageSent("ResendConfirmation")`: the sign-up confirmation email is sent again. |
+| `Reauthenticate()` | `MessageSent("Reauthenticate")`: the user gets a code by email, or by text message for a phone account. |
+
+A new email is used only after the user confirms it through the link sent to it,
+when the project asks for email confirmation.
+
+When **Secure password change** is on in the project's Auth settings, a user who
+signed in more than 24 hours ago needs a code to change their password: call
+`Reauthenticate`, ask for the code, and pass it as `code`. Otherwise leave `code`
+empty.
+
+Anonymous users can keep their data: `UpdateUser` with an email, then with a
+password, makes the anonymous account a full one with the same `id`.
+
 ## SessionChanged
 
 `SessionChanged(status, user)` is the one place to react to who is signed in.

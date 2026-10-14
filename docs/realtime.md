@@ -41,7 +41,7 @@ the old row's primary key unless the table keeps full old rows:
 alter table public.todos replica identity full;
 ```
 
-A simple way to stay in sync is to reload with `Select` whenever a change arrives.
+A simple way to stay in sync is to reload with `Query` whenever a change arrives.
 
 ## Broadcast
 
@@ -56,9 +56,11 @@ whether the sender receives its own messages too.
 stops sharing it.
 
 `PresenceChanged(joins, leaves)` fires on every app on the channel, including the
-sender. `joins` and `leaves` are dictionaries from presence key to state. To count
-who is online, keep a dictionary in a global variable: add the keys of `joins` and
-remove the keys of `leaves`.
+sender. `joins` and `leaves` are dictionaries from presence key to state.
+
+`PresenceState` is everyone on the channel right now, as a dictionary from presence
+key to state. Read it in `PresenceChanged` to show who is online; its length is
+how many.
 
 ## Errors
 

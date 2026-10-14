@@ -25,15 +25,18 @@ storage and server code. All from blocks, and it works in the AI Companion.
 ## Features
 
 - **Accounts:** sign up and sign in with email and password, or anonymously. Users stay
-  signed in between app starts.
-- **Database:** select with filters, ordering and paging; count; insert, upsert, update
-  and delete; call your own database functions.
+  signed in between app starts. Change the email, password or profile, and turn an
+  anonymous user into a full account.
+- **Database:** queries as dictionaries with dropdown keys, checked before they're sent:
+  filters, ordering by several columns, pages with a total count. Insert, upsert, insert
+  or skip, update and delete; call your own database functions; use other schemas.
 - **Realtime:** react the moment a row is added, changed or deleted, send messages
   between users, and see who is online.
 - **Storage:** upload media files, picker and camera results or any file; download,
-  list, move, copy and delete; make temporary links to private files.
+  list, search, move, copy and delete; read file details; make temporary links to
+  private files, and upload links for others.
 - **Edge Functions:** call your own server code, for work an app can't do safely, such
-  as calling a paid API with a secret key.
+  as calling a paid API with a secret key, in any region.
 - **Safe by default:** only publishable keys are accepted, and every request runs as
   the signed-in user, so row-level security applies.
 
@@ -60,7 +63,7 @@ never as the value of the block that started them.
 - Sign-in blocks answer through `Supabase.SessionChanged`, which also fires when the app
   starts with a saved session.
 - Data blocks take a **tag**, any text you choose, and their result event carries it
-  back: `Select("todos", …)` answers with `GotRows("todos", rows)`. One event handler
+  back: `Query("todos", …)` answers with `GotRows("todos", rows)`. One event handler
   can tell all your requests apart.
 - Failures fire the component's `Error` event with a short code, such as
   `invalid_credentials`, and a readable message. See [Errors](docs/errors.md).
@@ -93,8 +96,8 @@ the [`note-stats`](supabase/functions/note-stats/index.ts) function with
 | Component | What it does | Guide |
 |---|---|---|
 | **Supabase** | Connects to a project and signs users in and out. Keeps the session between app starts. | [Authentication](docs/authentication.md) |
-| **SupabaseDatabase** | Selects, counts, inserts, upserts, updates and deletes rows, and calls database functions. | [Database](docs/database.md) |
-| **SupabaseStorage** | Uploads, downloads, lists, moves, copies and deletes files in a bucket, and makes links to them. | [Storage](docs/storage.md) |
+| **SupabaseDatabase** | Queries, counts, inserts, upserts, updates and deletes rows, and calls database functions. | [Database](docs/database.md) |
+| **SupabaseStorage** | Uploads, downloads, lists, searches, moves, copies and deletes files in a bucket, and makes links to them. | [Storage](docs/storage.md) |
 | **SupabaseChannel** | Receives database changes as they happen, and sends messages and online status between users. | [Realtime](docs/realtime.md) |
 | **SupabaseFunctions** | Calls Edge Functions, your own server code. | [Edge Functions](docs/functions.md) |
 

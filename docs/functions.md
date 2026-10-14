@@ -19,6 +19,12 @@ user's access token, so it knows who called.
 `GotResponse` carries the HTTP status and the body: a dictionary or list when the
 function answers with JSON, text otherwise.
 
+## Region
+
+Functions run in the region closest to the user. Set the `Region` property, a
+dropdown of Supabase's regions, to run them in one region instead, for example
+next to the project's database. `Any` keeps the default.
+
 ## Example
 
 The sample's [`note-stats`](../supabase/functions/note-stats/index.ts) function

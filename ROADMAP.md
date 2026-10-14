@@ -7,20 +7,19 @@ Smaller features most apps ask for, and closing a security gap in realtime.
 | Area | Feature | Notes |
 |---|---|---|
 | Realtime | **Private channels** (realtime authorization) | Priority. Today anyone who knows a topic's name can join its broadcast and presence. Database changes are already protected by row-level security. |
-| Realtime | `PresenceState` block | Who is on the channel right now, without tracking joins and leaves. |
-| Realtime | Listening to every table in a schema | |
+| Realtime | Listening to every table in a schema | Waiting on supabase-kt, which drops the table name from the changes it reports. |
 | Authentication | One-time codes by email and SMS | Sign in without a password. |
 | Authentication | Password reset | By email link or code. |
-| Authentication | Updating the user: email, password, metadata | Also turns an anonymous user into a full account. |
-| Authentication | Resending the confirmation email, reauthenticating | |
 | Database | OR and NOT filters | Today every filter must match. |
-| Database | Ordering by several columns, other schemas than `public`, ignoring duplicates on upsert | |
-| Database | Rows and the total count in one call | For paging. |
-| Storage | Image transforms | Resized and cropped images through their links, for thumbnails. |
-| Storage | List options (limit, search, sort), file info, signed upload links | |
-| Edge Functions | Choosing the function's region | |
+| Storage | Image transforms | Resized and cropped images through their links, for thumbnails. Needs a paid plan on hosted Supabase. |
 | Testing | Apps with several screens; offline and refresh-failed sessions | |
 | Testing | Kodular and other App Inventor based builders | |
+
+Done, and in the next release (see the [changelog](CHANGELOG.md)): `PresenceState`;
+updating the user, resending the confirmation email and reauthenticating; queries as
+dictionaries, ordering by several columns, other schemas, insert or skip, pages with a
+total count; searching files, file info and signed upload links; the Edge Functions
+region.
 
 ## v1.2
 
