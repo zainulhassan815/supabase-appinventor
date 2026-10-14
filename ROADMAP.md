@@ -1,8 +1,9 @@
 # Roadmap
 
-## v1.1
+## v1.2
 
-Smaller features most apps ask for, and closing a security gap in realtime.
+What's left of the smaller features, and closing a security gap in realtime. 1.1.0
+shipped the rest; see the [changelog](CHANGELOG.md).
 
 | Area | Feature | Notes |
 |---|---|---|
@@ -15,13 +16,7 @@ Smaller features most apps ask for, and closing a security gap in realtime.
 | Testing | Apps with several screens; offline and refresh-failed sessions | |
 | Testing | Kodular and other App Inventor based builders | |
 
-Done, and in the next release (see the [changelog](CHANGELOG.md)): `PresenceState`;
-updating the user, resending the confirmation email and reauthenticating; queries as
-dictionaries, ordering by several columns, other schemas, insert or skip, pages with a
-total count; searching files, file info and signed upload links; the Edge Functions
-region.
-
-## v1.2
+## v1.3
 
 Larger features.
 
