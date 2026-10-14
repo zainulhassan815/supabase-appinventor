@@ -6,5 +6,20 @@ count 2
 update 1 \[\{.*"body":"changed".*\}\]
 delete 1 \[\{.*"body":"changed".*\}\]
 rpc 1
+order 3 .+
+sorted 3 \[\{"id":\d+,"body":"a"\}, \{"id":\d+,"body":"b"\}, \{"id":\d+,"body":"b"\}\]
+later b first true
+page \[\{"body":"b"\}, \{"body":"a"\}\] of 4
+error  SetQueryField invalid_argument query\.limit must be a whole number, 0 or more\.
+limit kept 2
+error bad key Query invalid_argument query: FilterOperator Equals doesn't belong here\. Use QueryField keys\.
+error bad text key Query invalid_argument query: "limt" isn't a QueryField\. Use columns, filters, orderBy, limit, offset\.
+error bad filter Query invalid_argument query\.filters\[1\]: Each filter is a list of column, operator and value\. Use the Filter block\.
+error bad order Query invalid_argument query\.orderBy: Order must be asc or desc, not sideways
+tags 2 \[\{"user_id":"[0-9a-f-]+","name":"x"\}, \{"user_id":"[0-9a-f-]+","name":"y"\}\]
+tags again 1 \[\{"user_id":"[0-9a-f-]+","name":"z"\}\]
+graphql \{"(data|errors)":.+
+error hidden Query PGRST106 .+
+schema public
 error unfiltered Delete invalid_argument .+
-error missing Select PGRST205 .+
+error missing Query PGRST205 .+

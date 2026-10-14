@@ -14,11 +14,13 @@ import com.google.appinventor.components.runtime.OnDestroyListener
 import com.google.appinventor.components.runtime.util.YailDictionary
 import com.google.appinventor.components.runtime.util.YailList
 import dev.dreamerslab.supabase.helpers.FilterOperator
+import dev.dreamerslab.supabase.helpers.QueryField
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.postgrest.query.Columns
 import io.github.jan.supabase.postgrest.query.Count
 import io.github.jan.supabase.postgrest.query.Order
+import io.github.jan.supabase.postgrest.query.PostgrestRequestBuilder
 import io.github.jan.supabase.postgrest.result.PostgrestResult
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
@@ -33,6 +35,7 @@ class SupabaseDatabase(container: ComponentContainer) : AndroidNonvisibleCompone
 
     private val requests = Requests(form, this, ::reportError)
     private var supabase: Supabase? = null
+    private var schema = "public"
 
     init {
         form.registerForOnDestroy(this)
@@ -47,14 +50,48 @@ class SupabaseDatabase(container: ComponentContainer) : AndroidNonvisibleCompone
         supabase = client
     }
 
-    @SimpleFunction(description = "Makes a filter for Select, Count, Update and Delete. For In, Contains, ContainedBy " +
+    @SimpleProperty(description = "The database schema of the tables and functions, usually public. Other " +
+        "schemas must be added to Exposed schemas in the project's API settings.")
+    fun Schema() = schema
+
+    @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_STRING, defaultValue = "public")
+    @SimpleProperty
+    fun Schema(name: String) {
+        schema = name.trim().ifEmpty { "public" }
+    }
+
+    @SimpleFunction(description = "Makes a filter for Query, Count, Update and Delete. For In, Contains, ContainedBy " +
         "and Overlaps, the value is a list.")
     fun Filter(column: String, @Options(FilterOperator::class) operator: String, value: Any): YailList =
         YailList.makeList(listOf(column, operator, value))
 
-    @SimpleFunction(description = "Reads the rows of a table that match every filter. GotRows fires with the " +
-        "tag and the rows, as a list of dictionaries. Columns is a comma-separated list, or * for all. Leave " +
-        "orderBy empty to keep the database's order, and limit at 0 for no limit.")
+    @SimpleFunction(description = "Reads the rows of a table that match the query. Query is a dictionary " +
+        "with QueryField keys, all optional: an empty dictionary reads every row. GotRows fires with the tag and " +
+        "the rows, as a list of dictionaries.")
+    fun Query(tag: String, table: String, query: YailDictionary) = requests.launch("Query", tag) {
+        GotRows(tag, select(table, selection(query)))
+    }
+
+    @SimpleFunction(description = "Reads one page of rows like Query, and counts every row that matches the " +
+        "filters, for paging. GotPage fires with the rows and the total.")
+    fun QueryPage(tag: String, table: String, query: YailDictionary) = requests.launch("QueryPage", tag) {
+        val selection = selection(query)
+        val response = table(table).select(Columns.raw(selection.columns)) {
+            count(Count.EXACT)
+            selection.applyTo(this)
+        }
+        GotPage(tag, rows(response), response.countOrNull() ?: 0)
+    }
+
+    @SimpleFunction(description = "Sets one setting of a query for Query and QueryPage, and checks its value.")
+    fun SetQueryField(query: YailDictionary, @Options(QueryField::class) field: String, value: Any) =
+        requests.run("SetQueryField") {
+            selection(YailDictionary(query).apply { put(field, value) })
+            query[field] = value
+        }
+
+    @Deprecated("Use Query.")
+    @SimpleFunction(description = "Reads the rows of a table that match every filter. Use Query instead.")
     fun Select(
         tag: String,
         table: String,
@@ -65,17 +102,13 @@ class SupabaseDatabase(container: ComponentContainer) : AndroidNonvisibleCompone
         limit: Int,
         offset: Int,
     ) = requests.launch("Select", tag) {
-        GotRows(tag, rows(postgrest().from(table).select(Columns.raw(columns.ifBlank { "*" })) {
-            filter { Filters.apply(this, filters) }
-            if (orderBy.isNotBlank()) order(orderBy, if (ascending) Order.ASCENDING else Order.DESCENDING)
-            if (limit > 0) range(offset.toLong(), offset.toLong() + limit - 1)
-        }))
+        GotRows(tag, select(table, Selection(columns, filters.toArray().map(Filters::parse), orders(orderBy, ascending), limit, offset)))
     }
 
     @SimpleFunction(description = "Counts the rows of a table that match every filter. GotCount fires with the " +
         "tag and the count.")
     fun Count(tag: String, table: String, filters: YailList) = requests.launch("Count", tag) {
-        val response = postgrest().from(table).select {
+        val response = table(table).select {
             head = true
             count(Count.EXACT)
             filter { Filters.apply(this, filters) }
@@ -86,14 +119,24 @@ class SupabaseDatabase(container: ComponentContainer) : AndroidNonvisibleCompone
     @SimpleFunction(description = "Adds rows to a table. Rows is a dictionary, or a list of dictionaries. " +
         "GotRows fires with the added rows, including the values the database filled in.")
     fun Insert(tag: String, table: String, rows: Any) = requests.launch("Insert", tag) {
-        GotRows(tag, rows(postgrest().from(table).insert(rowList(rows)) { select() }))
+        GotRows(tag, rows(table(table).insert(rowList(rows)) { select() }))
+    }
+
+    @SimpleFunction(description = "Adds rows, skipping the rows that already exist. OnConflict works like in " +
+        "Upsert. GotRows fires with the rows that were added.")
+    fun InsertOrSkip(tag: String, table: String, rows: Any, onConflict: String) = requests.launch("InsertOrSkip", tag) {
+        GotRows(tag, rows(table(table).upsert(rowList(rows)) {
+            if (onConflict.isNotBlank()) this.onConflict = onConflict
+            ignoreDuplicates = true
+            select()
+        }))
     }
 
     @SimpleFunction(description = "Adds rows, or updates the rows that already exist. OnConflict lists the unique " +
         "columns that identify a row, comma-separated; leave it empty to use the primary key. GotRows fires " +
         "with the rows.")
     fun Upsert(tag: String, table: String, rows: Any, onConflict: String) = requests.launch("Upsert", tag) {
-        GotRows(tag, rows(postgrest().from(table).upsert(rowList(rows)) {
+        GotRows(tag, rows(table(table).upsert(rowList(rows)) {
             if (onConflict.isNotBlank()) this.onConflict = onConflict
             select()
         }))
@@ -104,7 +147,7 @@ class SupabaseDatabase(container: ComponentContainer) : AndroidNonvisibleCompone
     fun Update(tag: String, table: String, values: YailDictionary, filters: YailList) =
         requests.launch("Update", tag) {
             requireFilters(filters)
-            GotRows(tag, rows(postgrest().from(table).update<JsonObject>(YailJson.toJsonObject(values)) {
+            GotRows(tag, rows(table(table).update<JsonObject>(YailJson.toJsonObject(values)) {
                 filter { Filters.apply(this, filters) }
                 select()
             }))
@@ -113,7 +156,7 @@ class SupabaseDatabase(container: ComponentContainer) : AndroidNonvisibleCompone
     @SimpleFunction(description = "Deletes every row that matches the filters. GotRows fires with the deleted rows.")
     fun Delete(tag: String, table: String, filters: YailList) = requests.launch("Delete", tag) {
         requireFilters(filters)
-        GotRows(tag, rows(postgrest().from(table).delete {
+        GotRows(tag, rows(table(table).delete {
             filter { Filters.apply(this, filters) }
             select()
         }))
@@ -122,13 +165,18 @@ class SupabaseDatabase(container: ComponentContainer) : AndroidNonvisibleCompone
     @SimpleFunction(description = "Calls a database function (RPC) with a dictionary of arguments. GotResult fires " +
         "with its result: a list, a dictionary, or a single value.")
     fun CallFunction(tag: String, name: String, arguments: YailDictionary) = requests.launch("CallFunction", tag) {
-        val response = postgrest().rpc(name, YailJson.toJsonObject(arguments))
+        val response = postgrest().rpc(name, YailJson.toJsonObject(arguments)) { schema = this@SupabaseDatabase.schema }
         GotResult(tag, if (response.data.isBlank()) "" else YailJson.toYail(Json.parseToJsonElement(response.data)))
     }
 
-    @SimpleEvent(description = "Rows arrived from Select, Insert, Upsert, Update or Delete.")
+    @SimpleEvent(description = "Rows arrived from Query, Insert, Upsert, Update or Delete.")
     fun GotRows(tag: String, rows: YailList) {
         EventDispatcher.dispatchEvent(this, "GotRows", tag, rows)
+    }
+
+    @SimpleEvent(description = "A page of rows arrived from QueryPage. Total is how many rows match the filters.")
+    fun GotPage(tag: String, rows: YailList, total: Long) {
+        EventDispatcher.dispatchEvent(this, "GotPage", tag, rows, total)
     }
 
     @SimpleEvent(description = "A count arrived from Count.")
@@ -153,6 +201,43 @@ class SupabaseDatabase(container: ComponentContainer) : AndroidNonvisibleCompone
         EventDispatcher.dispatchEvent(this, "Error", tag, operation, code, message)
 
     private fun postgrest() = requireNotNull(supabase) { "Set the Client property to a Supabase component" }.client.postgrest
+
+    private fun table(name: String) = postgrest().from(schema, name)
+
+    private suspend fun select(table: String, selection: Selection) =
+        rows(table(table).select(Columns.raw(selection.columns)) { selection.applyTo(this) })
+
+    private fun selection(query: YailDictionary): Selection {
+        val fields = Fields(query, "query", QueryField.entries)
+        return Selection(
+            fields.text(QueryField.Columns).orEmpty(),
+            fields.list(QueryField.Filters, Filters::parse),
+            fields.text(QueryField.OrderBy) { orders(it, true) }.orEmpty(),
+            fields.count(QueryField.Limit) ?: 0,
+            fields.count(QueryField.Offset) ?: 0,
+        )
+    }
+
+    private fun orders(orderBy: String, ascending: Boolean) =
+        Sorting.parse(orderBy, ascending).map { (column, isAscending) ->
+            column to if (isAscending) Order.ASCENDING else Order.DESCENDING
+        }
+
+    private class Selection(
+        columns: String,
+        val filters: List<Filter>,
+        val orders: List<Pair<String, Order>>,
+        val limit: Int,
+        val offset: Int,
+    ) {
+        val columns = columns.ifBlank { "*" }
+
+        fun applyTo(request: PostgrestRequestBuilder) = with(request) {
+            filter { Filters.apply(this, filters) }
+            for ((column, order) in orders) order(column, order)
+            if (limit > 0) range(offset.toLong(), offset.toLong() + limit - 1)
+        }
+    }
 
     private fun rowList(rows: Any): List<JsonObject> = when (val json = YailJson.toJson(rows)) {
         is JsonArray -> json.map { requireNotNull(it as? JsonObject) { "Each row is a dictionary" } }
