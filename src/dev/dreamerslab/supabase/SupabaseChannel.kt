@@ -28,13 +28,15 @@ import io.github.jan.supabase.realtime.channel
 import io.github.jan.supabase.realtime.postgresChangeFlow
 import io.github.jan.supabase.realtime.realtime
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.drop
-import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.JsonObject
 
 @Extension(
@@ -120,7 +122,7 @@ class SupabaseChannel(container: ComponentContainer) : AndroidNonvisibleComponen
             listeners += { channel, scope ->
                 changes(channel, schema.ifBlank { "public" }, kind, target)
                     .onEach { change(table, it) }
-                    .launchIn(scope)
+                    .launchNow(scope)
             }
         }
 
@@ -131,7 +133,7 @@ class SupabaseChannel(container: ComponentContainer) : AndroidNonvisibleComponen
         listeners += { channel, scope ->
             channel.broadcastFlow(event)
                 .onEach { BroadcastReceived(it.event, payload(it.payload)) }
-                .launchIn(scope)
+                .launchNow(scope)
         }
     }
 
@@ -146,10 +148,10 @@ class SupabaseChannel(container: ComponentContainer) : AndroidNonvisibleComponen
             if (presenceKey.isNotBlank()) presence { key = presenceKey }
         }
         val scope = CoroutineScope(requests.scope.coroutineContext + Job(requests.scope.coroutineContext[Job]))
-        created.status.drop(1).mapNotNull(::channelStatus).onEach { StatusChanged(it.toUnderlyingValue()) }.launchIn(scope)
+        created.status.drop(1).mapNotNull(::channelStatus).onEach { StatusChanged(it.toUnderlyingValue()) }.launchNow(scope)
         created.presenceChangeFlow()
             .onEach { PresenceChanged(presences(it.joins), presences(it.leaves)) }
-            .launchIn(scope)
+            .launchNow(scope)
         listeners.forEach { it(created, scope) }
         channel = created
         channelScope = scope
@@ -217,6 +219,8 @@ class SupabaseChannel(container: ComponentContainer) : AndroidNonvisibleComponen
     private fun subscribed() = requireNotNull(channel) { "Subscribe first" }
 
     private fun requireUnsubscribed() = require(channel == null) { "Unsubscribe first" }
+
+    private fun <T> Flow<T>.launchNow(scope: CoroutineScope) = scope.launch(start = CoroutineStart.UNDISPATCHED) { collect() }
 
     private suspend fun closeChannel(current: RealtimeChannel) {
         channel = null
