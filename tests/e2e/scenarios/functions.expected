@@ -1,6 +1,9 @@
-json 200 \{"method":"POST","test":"yes","contentType":"application\\?/json","body":"\{\\"a\\":1\}"\}
-text 200 \{"method":"PUT","test":"","contentType":"text\\?/plain","body":"plain text"\}
-get 200 \{"method":"GET","test":"","contentType":"","body":""\}
+json 200 \{"method":"POST","test":"yes","region":"any","contentType":"application\\?/json","body":"\{\\"a\\":1\}"\}
+text 200 \{"method":"PUT","test":"","region":"any","contentType":"text\\?/plain","body":"plain text"\}
+get 200 \{"method":"GET","test":"","region":"any","contentType":"","body":""\}
 hello 200 \{"message":"Hello App Inventor!"\}
+region 200 \{"method":"GET","test":"","region":"eu-west-1","contentType":"","body":""\}
+region property eu-west-1
+error  Region invalid_argument
 error fail Invoke http_418
 error missing Invoke http_404

@@ -13,7 +13,9 @@ import com.google.appinventor.components.runtime.EventDispatcher
 import com.google.appinventor.components.runtime.OnDestroyListener
 import com.google.appinventor.components.runtime.util.YailDictionary
 import com.google.appinventor.components.runtime.util.YailList
+import dev.dreamerslab.supabase.helpers.Region
 import dev.dreamerslab.supabase.helpers.RequestMethod
+import io.github.jan.supabase.functions.FunctionRegion
 import io.github.jan.supabase.functions.functions
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.header
@@ -34,6 +36,7 @@ class SupabaseFunctions(container: ComponentContainer) : AndroidNonvisibleCompon
 
     private val requests = Requests(form, this, ::reportError)
     private var supabase: Supabase? = null
+    private var region = Region.Any
 
     init {
         form.registerForOnDestroy(this)
@@ -48,6 +51,23 @@ class SupabaseFunctions(container: ComponentContainer) : AndroidNonvisibleCompon
         supabase = client
     }
 
+    @SimpleProperty(description = "Where functions run. Choose the region of your database when a function " +
+        "uses it a lot, so its queries are fast.")
+    @Options(Region::class)
+    fun Region(): String = region.toUnderlyingValue()
+
+    @DesignerProperty(
+        editorType = PropertyTypeConstants.PROPERTY_TYPE_CHOICES,
+        editorArgs = ["any", "ap-northeast-1", "ap-northeast-2", "ap-south-1", "ap-southeast-1", "ap-southeast-2",
+            "ca-central-1", "eu-central-1", "eu-west-1", "eu-west-2", "eu-west-3", "sa-east-1", "us-east-1",
+            "us-west-1", "us-west-2"],
+        defaultValue = "any",
+    )
+    @SimpleProperty
+    fun Region(@Options(Region::class) region: String) = requests.run("Region") {
+        this.region = requireNotNull(Region.fromUnderlyingValue(region)) { "Unknown region: $region" }
+    }
+
     @SimpleFunction(description = "Calls an Edge Function. Body is a dictionary or list (sent as JSON), text, or " +
         "empty for none. Headers is a dictionary of extra HTTP headers. GotResponse fires with the response; " +
         "a JSON response arrives as a dictionary or list.")
@@ -58,7 +78,7 @@ class SupabaseFunctions(container: ComponentContainer) : AndroidNonvisibleCompon
         headers: YailDictionary,
         @Options(RequestMethod::class) method: String,
     ) = requests.launch("Invoke", tag) {
-        val response = client().functions.invoke(name) {
+        val response = client().functions.invoke(name, FunctionRegion.entries.first { it.value == region.toUnderlyingValue() }) {
             this.method = HttpMethod.parse(method)
             for ((key, value) in headers.entries) header(key.toString(), value.toString())
             body(this, body)

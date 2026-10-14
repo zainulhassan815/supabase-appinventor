@@ -8,6 +8,7 @@ export default {
     return Response.json({
       method: req.method,
       test: req.headers.get("x-test"),
+      region: req.headers.get("x-region"),
       contentType: req.headers.get("content-type"),
       body,
     });
