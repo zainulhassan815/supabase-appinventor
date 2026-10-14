@@ -1,11 +1,17 @@
 public http://127\.0\.0\.1:54321/storage/v1/object/public/uploads/[0-9a-f-]+/hello\.txt
 uploaded asset
-files \["hello\.txt"\]
+files list \["hello\.txt"\]
 copied
 moved
+files search \["moved\.txt"\]
+error  SetSearchField invalid_argument search\.sortBy: Sort by name, created_at, updated_at, last_accessed_at, not size
+files page \["moved\.txt"\]
+info size 24 type text/plain.*
+upload url http://127\.0\.0\.1:54321/storage/v1/object/upload/sign/uploads/[0-9a-f-]+/token\.txt\?token=.+
+uploaded token
 downloaded /storage/emulated/0/Android/data/dev\.dreamerslab\.supabase\.e2e/files/e2e/moved\.txt
 read hello from App Inventor
 uploaded again
 signed http://127\.0\.0\.1:54321/storage/v1/object/sign/uploads/[0-9a-f-]+/roundtrip\.txt\?token=.+
-removed 3
+removed 4
 error forbidden Upload http_400 new row violates row-level security policy
