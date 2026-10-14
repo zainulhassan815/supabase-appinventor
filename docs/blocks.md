@@ -354,6 +354,10 @@ A realtime channel: receives database changes as they happen, and sends messages
 
 **PresenceKey** (read-write): The name this app's presence is tracked under, such as the user's id. Leave empty for a random one.
 
+![get Private](images/blocks/SupabaseChannel1-getPrivate.png) ![set Private](images/blocks/SupabaseChannel1-setPrivate.png)
+
+**Private** (read-write): Whether only users allowed by the project's policies on realtime.messages may join the channel, send broadcasts and track presence. Set it before Subscribe.
+
 ![get IsSubscribed](images/blocks/SupabaseChannel1-getIsSubscribed.png)
 
 **IsSubscribed** (read-only): Whether the channel is subscribed.

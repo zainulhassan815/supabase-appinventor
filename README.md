@@ -31,7 +31,7 @@ storage and server code. All from blocks, and it works in the AI Companion.
   filters, ordering by several columns, pages with a total count. Insert, upsert, insert
   or skip, update and delete; call your own database functions; use other schemas.
 - **Realtime:** react the moment a row is added, changed or deleted, send messages
-  between users, and see who is online.
+  between users, and see who is online, on channels only your users can join.
 - **Storage:** upload media files, picker and camera results or any file; download,
   list, search, move, copy and delete; read file details; make temporary links to
   private files, and upload links for others.
@@ -113,6 +113,10 @@ contains its block: drag it into your workspace.
   may read and change. The publishable key alone should reveal nothing. The sample's
   [`schema.sql`](samples/live-notes/schema.sql) shows owner-only policies for a table
   and a storage bucket.
+- Make realtime channels **private** when their broadcasts or presence aren't for
+  everyone: anyone with the publishable key can join a public channel. Policies on
+  `realtime.messages` decide who joins a private one. See
+  [Private channels](docs/realtime.md#private-channels).
 - The session is saved in the app's private storage, like TinyDB. It isn't encrypted.
 
 ## FAQ

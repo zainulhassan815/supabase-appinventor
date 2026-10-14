@@ -20,6 +20,7 @@ handler, `Screen.ErrorOccurred` fires instead, with error number 3300.
 | `PGRST…` | From PostgREST, such as `PGRST205` (no such table) or `PGRST116` (no rows). |
 | Postgres codes | Such as `23505` (duplicate key), `23503` (missing referenced row), `42501` (blocked by row-level security). |
 | `http_` + status | Storage and Edge Functions, such as `http_400`, `http_403` or `http_404`. |
+| `channel_refused` | The realtime server refused to join a channel: for a private channel, no policy on `realtime.messages` lets the user in. |
 
 Supabase's [error code list](https://supabase.com/docs/guides/api/rest/postgres-error-codes)
 explains the database codes.

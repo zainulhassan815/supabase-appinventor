@@ -25,6 +25,33 @@ Then call `Subscribe`. `StatusChanged` fires with `Subscribing`, then
 `Subscribed`. What you listen to stays registered, so after `Unsubscribe` you can
 `Subscribe` again. The channel reconnects by itself after a dropped connection.
 
+## Private channels
+
+Anyone with the project's publishable key can join a public channel, if they
+know its topic, and read its broadcasts and presence. Set `Private` to true to
+let in only the users your policies allow. Policies on `realtime.messages` decide
+who may join (`select`) and who may send broadcasts and track presence
+(`insert`), and `realtime.topic()` is the channel's topic:
+
+```sql
+create policy "Signed-in users join the notes channel" on realtime.messages
+  for select to authenticated using ((select realtime.topic()) = 'notes');
+create policy "Signed-in users send on the notes channel" on realtime.messages
+  for insert to authenticated with check ((select realtime.topic()) = 'notes');
+```
+
+A topic per user or per group works too, such as `'room:' || auth.uid()`. Turn off
+**Allow public access** in the project's Realtime settings to require private
+channels everywhere.
+
+When the server refuses to join, `StatusChanged` fires with `Unsubscribed` and
+`Error` with the code `channel_refused`.
+
+Database changes don't need `Private`: row-level security on the table already
+decides which changes each user receives.
+
+## Tables
+
 A table sends changes only if it is in the `supabase_realtime` publication:
 
 ```sql

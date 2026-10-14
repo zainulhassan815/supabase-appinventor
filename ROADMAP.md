@@ -7,7 +7,6 @@ shipped the rest; see the [changelog](CHANGELOG.md).
 
 | Area | Feature | Notes |
 |---|---|---|
-| Realtime | **Private channels** (realtime authorization) | Priority. Today anyone who knows a topic's name can join its broadcast and presence. Database changes are already protected by row-level security. |
 | Realtime | Listening to every table in a schema | Waiting on supabase-kt, which drops the table name from the changes it reports. |
 | Authentication | One-time codes by email and SMS | Sign in without a password. |
 | Authentication | Password reset | By email link or code. |

@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- **SupabaseChannel:** the `Private` property makes a channel private: only users allowed by policies on `realtime.messages` can join it, send broadcasts and track presence. A refused join fires `Error` with `channel_refused`.
+- **SupabaseChannel:** `StatusChanged` no longer misses `Subscribing` when subscribing again while connected.
+- The Live Notes sample uses a private channel; its `schema.sql` adds the policies.
+
 ## 1.1.0 (2026-10-14)
 
 - **Supabase:** `UpdateUser` changes the email, password or metadata, and turns an anonymous user into a full account (`UserUpdated`). `ResendConfirmation` and `Reauthenticate` send their emails (`MessageSent`).
