@@ -13,7 +13,7 @@
   <a href="https://github.com/zainulhassan815/supabase-appinventor/releases/latest">Download</a> ·
   <a href="docs/getting-started.md">Getting started</a> ·
   <a href="docs">Guides</a> ·
-  <a href="docs/reference.md">Block reference</a> ·
+  <a href="docs/blocks.md">Blocks</a> ·
   <a href="ROADMAP.md">Roadmap</a>
 </p>
 
@@ -98,7 +98,8 @@ the [`note-stats`](supabase/functions/note-stats/index.ts) function with
 | **SupabaseChannel** | Receives database changes as they happen, and sends messages and online status between users. | [Realtime](docs/realtime.md) |
 | **SupabaseFunctions** | Calls Edge Functions, your own server code. | [Edge Functions](docs/functions.md) |
 
-Every block is listed in the [block reference](docs/reference.md).
+Every block is shown with its description in [Blocks](docs/blocks.md). Each image
+contains its block: drag it into your workspace.
 
 ## Security
 
@@ -144,7 +145,10 @@ python3 samples/package.py
 ```
 
 `rush build` writes the extension to `out/dev.dreamerslab.supabase.aix` with its block
-reference, and `samples/package.py` packs the sample into `out/LiveNotes.aia`. GitHub
+reference, and `samples/package.py` packs the sample into `out/LiveNotes.aia`. After
+changing blocks, render their images into `docs/images/blocks` (see
+[Testing](docs/testing.md)) and regenerate [docs/blocks.md](docs/blocks.md) with
+`python3 docs/blocks.py`; it fails if a block has no image. GitHub
 Actions builds both on every push, and a tag named after the version in `rush.yml`, like
 `v1.0.0`, publishes a release.
 

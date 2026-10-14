@@ -40,9 +40,9 @@ def blocks(component):
 def helpers(components):
     found = {}
     for component in components:
-        for entry in component['events'] + component['methods']:
-            for param in entry['params']:
-                data = param.get('helper', {}).get('data')
+        for entry in component['events'] + component['methods'] + component['blockProperties']:
+            for owner in [entry] + entry.get('params', []):
+                data = owner.get('helper', {}).get('data')
                 if data:
                     found[data['key']] = data['defaultOpt']
     for key, default in sorted(found.items()):
