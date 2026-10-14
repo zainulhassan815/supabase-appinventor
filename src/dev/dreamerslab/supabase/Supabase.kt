@@ -21,6 +21,7 @@ import dev.dreamerslab.supabase.helpers.SessionStatus
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.auth.MemoryCodeVerifierCache
+import io.github.jan.supabase.auth.OtpType
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.providers.builtin.Email
 import io.github.jan.supabase.auth.user.UserInfo
@@ -118,9 +119,49 @@ class Supabase(container: ComponentContainer) : AndroidNonvisibleComponent(conta
         client.auth.signOut()
     }
 
+    @SimpleFunction(description = "Changes the signed-in user. Leave email or password empty, or metadata an " +
+        "empty dictionary, to keep them; metadata is merged into the saved metadata. A new email must be " +
+        "confirmed through the link sent to it before it is used. Code is the code sent by Reauthenticate, needed " +
+        "for a new password when the project turns on Secure password change; otherwise leave it empty. " +
+        "Giving an anonymous user an email and then a password makes it a full account. UserUpdated fires.")
+    fun UpdateUser(email: String, password: String, metadata: YailDictionary, code: String) =
+        requests.launch("UpdateUser") {
+            val user = client.auth.updateUser {
+                if (email.isNotEmpty()) this.email = email
+                if (password.isNotEmpty()) this.password = password
+                if (metadata.isNotEmpty()) data = YailJson.toJsonObject(metadata)
+                if (code.isNotEmpty()) nonce = code
+            }
+            UserUpdated(userDictionary(user))
+        }
+
+    @SimpleFunction(description = "Sends the sign-up confirmation email again. MessageSent fires.")
+    fun ResendConfirmation(email: String) = requests.launch("ResendConfirmation") {
+        client.auth.resendEmail(OtpType.Email.SIGNUP, email)
+        MessageSent("ResendConfirmation")
+    }
+
+    @SimpleFunction(description = "Sends the signed-in user a code by email, or by text message for a phone " +
+        "account, to confirm a password change with UpdateUser. MessageSent fires.")
+    fun Reauthenticate() = requests.launch("Reauthenticate") {
+        client.auth.reauthenticate()
+        MessageSent("Reauthenticate")
+    }
+
     @SimpleEvent(description = "An account was created by SignUp.")
     fun SignedUp(user: YailDictionary) {
         EventDispatcher.dispatchEvent(this, "SignedUp", user)
+    }
+
+    @SimpleEvent(description = "UpdateUser changed the user.")
+    fun UserUpdated(user: YailDictionary) {
+        EventDispatcher.dispatchEvent(this, "UserUpdated", user)
+    }
+
+    @SimpleEvent(description = "An email or text message was sent. Operation is the block that sent it, such as " +
+        "Reauthenticate.")
+    fun MessageSent(operation: String) {
+        EventDispatcher.dispatchEvent(this, "MessageSent", operation)
     }
 
     @SimpleEvent(description = "The user signed in or out, or a saved session was restored when the app started.")
