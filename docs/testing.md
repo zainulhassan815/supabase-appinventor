@@ -35,7 +35,9 @@ again before looking for a bug.
 
 Set `SUPABASE_URL` and `SUPABASE_KEY` to run the scenarios against a hosted
 project. It needs the sample's and the tests' `schema.sql`, anonymous sign-ins, and
-the functions in `supabase/functions` deployed.
+the functions in `supabase/functions` deployed. Supabase's built-in email service sends two emails
+an hour, so `auth` fails at `Reauthenticate` there unless the project has its own
+SMTP server.
 
 ## The sample
 
