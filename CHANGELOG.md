@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.2.0 (2026-10-15)
 
 - **SupabaseDatabase:** `AnyOf`, `AllOf` and `Not` group filters, and nest.
 - **Supabase:** sign in with a code: `SendEmailCode` and `SendSmsCode` send it, `VerifyEmailCode` and `VerifySmsCode` sign in. `ResetPassword` emails a code to reset a forgotten password (`CodeType.PasswordReset`).
