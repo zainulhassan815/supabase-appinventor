@@ -10,7 +10,7 @@ PACKAGE = 'dev.dreamerslab.supabase.e2e.Screen1'
 RUNTIME = 'com.google.appinventor.components.runtime'
 BUILT_IN_VERSIONS = {
     'Button': '8', 'File': '4', 'HorizontalArrangement': '4', 'Image': '8', 'Label': '6', 'ListView': '11',
-    'PasswordTextBox': '8', 'TextBox': '15', 'VerticalArrangement': '4',
+    'PasswordTextBox': '8', 'TextBox': '15', 'VerticalArrangement': '4', 'Web': '9',
 }
 ASSETS = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'assets')
 

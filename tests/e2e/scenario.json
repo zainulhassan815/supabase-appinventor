@@ -5,5 +5,6 @@
   {"name": "SupabaseChannel1", "type": "SupabaseChannel", "properties": {"Client": "@Supabase1", "Topic": "e2e", "PresenceKey": "tester"}},
   {"name": "SupabaseFunctions1", "type": "SupabaseFunctions", "properties": {"Client": "@Supabase1"}},
   {"name": "File1", "type": "File"},
+  {"name": "Mailpit", "type": "Web"},
   {"name": "Label1", "type": "Label", "properties": {"Text": ""}}
 ]

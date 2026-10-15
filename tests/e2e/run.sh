@@ -16,6 +16,7 @@ work=$(dirname "$(dirname "$apk")")
 "$adb" uninstall "$package" >/dev/null 2>&1 || true
 "$adb" install "$apk" >/dev/null
 "$adb" reverse tcp:54321 tcp:54321 >/dev/null
+"$adb" reverse tcp:54324 tcp:54324 >/dev/null
 "$adb" logcat -c
 "$adb" shell monkey -p "$package" -c android.intent.category.LAUNCHER 1 >/dev/null 2>&1
 label() {
