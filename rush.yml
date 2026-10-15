@@ -24,6 +24,7 @@ dependencies:
 - io.github.jan-tennert.supabase:storage-kt-jvm:3.8.0
 - io.github.jan-tennert.supabase:functions-kt-jvm:3.8.0
 - io.ktor:ktor-client-okhttp-jvm:3.5.1
+- org.jetbrains.kotlin:kotlin-reflect:2.4.0
 #- example.jar                 # Local JAR or AAR file stored in "deps" directory
 #- com.example:foo-bar:1.2.3   # Coordinate of some remote Maven artifact
 
@@ -46,9 +47,5 @@ homepage: https://github.com/zainulhassan815/supabase-appinventor
 # file or link to something hosted online.
 license: LICENSE
 
-# Similar to dependencies, except libraries defined as provided are not included
-# in the final AIX. This is useful when you want to use a library in your
-# extension but don't want to include it in the final AIX because it's already
-# included in the App Inventor.
-provided_dependencies:
-- org.jetbrains.kotlin:kotlin-reflect:2.4.0
+libraries:
+  org.jetbrains.kotlin:kotlin-reflect: provided

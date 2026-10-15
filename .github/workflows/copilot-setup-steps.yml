@@ -16,5 +16,5 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v4
-      - uses: zainulhassan815/rush-cli@v2
+      - uses: shreyashsaitwal/rush-cli@v2
       - run: rush deps sync

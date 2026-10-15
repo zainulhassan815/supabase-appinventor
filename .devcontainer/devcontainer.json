@@ -2,7 +2,7 @@
   "name": "Rush",
   "image": "mcr.microsoft.com/devcontainers/base:ubuntu-24.04",
   "features": {
-    "ghcr.io/zainulhassan815/rush-cli/rush:1": {}
+    "ghcr.io/shreyashsaitwal/rush-cli/rush:1": {}
   },
   "postCreateCommand": "rush deps sync",
   "customizations": {

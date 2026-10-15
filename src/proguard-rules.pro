@@ -8,16 +8,6 @@
   *;
 }
 
-# ProGuard sometimes (randomly) renames references to the following classes in 
-# the extensions, this rule prevents that from happening. Keep this rule even
-# if you don't use these classes in your extension.
--keeppackagenames gnu.kawa**, gnu.expr**
-
-# Repackages all the optimized classes into dev.dreamerslab.supabase.repackaged package in resulting
-# AIX. Repackaging is necessary to avoid clashes with the other extensions that
-# might be using same libraries as you.
--repackageclasses dev.dreamerslab.supabase.repacked
-
 -dontwarn kotlinx.atomicfu.**
 -dontwarn kotlin.concurrent.atomics.**
 -dontwarn kotlin.jvm.internal.EnhancedNullability
