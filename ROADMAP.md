@@ -8,7 +8,6 @@ shipped the rest; see the [changelog](CHANGELOG.md).
 | Area | Feature | Notes |
 |---|---|---|
 | Realtime | Listening to every table in a schema | Waiting on supabase-kt, which drops the table name from the changes it reports. |
-| Database | OR and NOT filters | Today every filter must match. |
 | Storage | Image transforms | Resized and cropped images through their links, for thumbnails. Needs a paid plan on hosted Supabase. |
 | Testing | Apps with several screens; offline and refresh-failed sessions | |
 | Testing | Kodular and other App Inventor based builders | |

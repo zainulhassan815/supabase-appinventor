@@ -70,6 +70,21 @@ dropdown has:
 | `Contains`, `ContainedBy`, `Overlaps` | (arrays and JSON) contains every value, is within, or shares a value with a list |
 | `TextSearch` | matches a full-text search query |
 
+### Any, all and not
+
+Every filter in a list has to match. To match when one of several does, or when
+one doesn't, group them:
+
+- `AnyOf(filters)`: any of the filters in the list matches.
+- `AllOf(filters)`: every filter in the list matches. Useful inside `AnyOf` or
+  `Not`.
+- `Not(filter)`: the filter doesn't match.
+
+Each makes a filter, so they nest: `AnyOf([AllOf([done = true, pinned = true]),
+priority = high])`. They work in `Query`, `QueryPage`, `Count`, `Update` and
+`Delete`. A group is a dictionary such as `{"anyOf": [["status", "eq", "open"],
+{"not": ["owner", "is", "null"]}]}`, so groups decoded from JSON work too.
+
 ## Writing
 
 | Block | Result |

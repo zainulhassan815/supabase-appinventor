@@ -118,6 +118,18 @@ Reads and writes the tables of a Supabase project, and calls its database functi
 
 **Filter:** Makes a filter for Query, Count, Update and Delete. For In, Contains, ContainedBy and Overlaps, the value is a list.
 
+![AnyOf](images/blocks/SupabaseDatabase1-AnyOf.png)
+
+**AnyOf:** Makes a filter that matches when any of the filters in the list match. Use it wherever a filter goes, also inside AnyOf, AllOf and Not.
+
+![AllOf](images/blocks/SupabaseDatabase1-AllOf.png)
+
+**AllOf:** Makes a filter that matches when every filter in the list matches. Filters in a query already all have to match: use AllOf inside AnyOf or Not.
+
+![Not](images/blocks/SupabaseDatabase1-Not.png)
+
+**Not:** Makes a filter that matches when the given filter doesn't.
+
 ![Query](images/blocks/SupabaseDatabase1-Query.png)
 
 **Query:** Reads the rows of a table that match the query. Query is a dictionary with QueryField keys, all optional: an empty dictionary reads every row. GotRows fires with the tag and the rows, as a list of dictionaries.

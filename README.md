@@ -29,7 +29,7 @@ storage and server code. All from blocks, and it works in the AI Companion.
   app starts. Change the email, password or profile, and turn an
   anonymous user into a full account.
 - **Database:** queries as dictionaries with dropdown keys, checked before they're sent:
-  filters, ordering by several columns, pages with a total count. Insert, upsert, insert
+  filters with any, all and not, ordering by several columns, pages with a total count. Insert, upsert, insert
   or skip, update and delete; call your own database functions; use other schemas.
 - **Realtime:** react the moment a row is added, changed or deleted, send messages
   between users, and see who is online, on channels only your users can join.
