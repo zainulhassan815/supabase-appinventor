@@ -27,7 +27,10 @@ tests/e2e/run.sh tests/e2e/scenarios/database.yail
 A scenario is a screen's YAIL. It reports lines into a Label, which are matched
 against the scenario's `.expected` patterns (`!unordered` on the first line allows
 any order). `auth`, `database`, `storage`, `channel` and `functions` cover each
-component. `private` covers private channels.
+component. `private` covers private channels, and `codes` sign-in codes and password
+resets: it reads the codes from the local backend's mail server (Mailpit) and
+signs in with the test phone number in `supabase/config.toml`, so it runs locally
+only.
 
 `channel` sometimes fails on its first run after the realtime server has been idle,
 locally and on hosted projects: the server misses the first database change. Run it

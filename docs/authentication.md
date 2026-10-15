@@ -23,6 +23,42 @@ run as that user and row-level security applies.
 | `SignInAnonymously()` | `SessionChanged(SignedIn, user)`. Anonymous sign-ins must be enabled in the project. |
 | `SignOut()` | `SessionChanged(SignedOut, …)` |
 
+## Signing in with a code
+
+Users can sign in without a password, with a 6-digit code sent by email or text
+message:
+
+| Block | Result |
+|---|---|
+| `SendEmailCode(email, createUser)` | `MessageSent("SendEmailCode")`: the code is emailed. |
+| `SendSmsCode(phone, createUser)` | `MessageSent("SendSmsCode")`: the code is texted. `phone` is in international format, like `+15551234567`. |
+| `VerifyEmailCode(email, code, type)` | `SessionChanged(SignedIn, user)`. `type` is a **CodeType** option: `SignIn` for codes from `SendEmailCode`. |
+| `VerifySmsCode(phone, code)` | `SessionChanged(SignedIn, user)` |
+
+With `createUser` true, a new email or phone number gets an account; with false,
+an unknown one fails with `otp_disabled`. A wrong or expired code fails with
+`otp_expired`.
+
+Supabase's emails contain a sign-in link by default, not a code. In the
+dashboard, open **Authentication → Emails** and add `{{ .Token }}` to the
+**Magic link** template, for example `<p>Your sign-in code: {{ .Token }}</p>`.
+Text messages need an SMS provider, set up in **Authentication → Sign In /
+Providers → Phone**.
+
+## Resetting a password
+
+1. `ResetPassword(email)` emails a code. `MessageSent("ResetPassword")` fires.
+   Add `{{ .Token }}` to the **Reset password** email template as well.
+2. `VerifyEmailCode(email, code, PasswordReset)` signs the user in.
+3. `UpdateUser("", newPassword, emptyDictionary, "")` sets the new password.
+
+`ResetPassword` succeeds even for an email without an account, so it doesn't
+reveal who has one.
+
+Supabase's own email service sends only two emails an hour. Set up your own
+SMTP server (Project Settings → Authentication) before your app sends codes to
+real users.
+
 ## Changing the account
 
 | Block | Result |

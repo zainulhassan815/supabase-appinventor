@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- **Supabase:** sign in with a code: `SendEmailCode` and `SendSmsCode` send it, `VerifyEmailCode` and `VerifySmsCode` sign in. `ResetPassword` emails a code to reset a forgotten password (`CodeType.PasswordReset`).
 - **SupabaseChannel:** the `Private` property makes a channel private: only users allowed by policies on `realtime.messages` can join it, send broadcasts and track presence. A refused join fires `Error` with `channel_refused`.
 - **SupabaseChannel:** `StatusChanged` no longer misses `Subscribing` when subscribing again while connected.
 - The Live Notes sample uses a private channel; its `schema.sql` adds the policies.

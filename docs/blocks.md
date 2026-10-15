@@ -44,6 +44,26 @@ Connects the app to a Supabase project and signs users in. Other Supabase compon
 
 **Reauthenticate:** Sends the signed-in user a code by email, or by text message for a phone account, to confirm a password change with UpdateUser. MessageSent fires.
 
+![SendEmailCode](images/blocks/Supabase1-SendEmailCode.png)
+
+**SendEmailCode:** Emails a sign-in code. CreateUser makes an account when there is none; otherwise an unknown email fails. The project's Magic link email template must show the code with {{ .Token }}. MessageSent fires; then pass the code to VerifyEmailCode.
+
+![SendSmsCode](images/blocks/Supabase1-SendSmsCode.png)
+
+**SendSmsCode:** Texts a sign-in code to a phone number in international format, such as +15551234567. The project needs an SMS provider. CreateUser makes an account when there is none. MessageSent fires; then pass the code to VerifySmsCode.
+
+![ResetPassword](images/blocks/Supabase1-ResetPassword.png)
+
+**ResetPassword:** Emails a code to reset the password. The project's Reset password email template must show the code with {{ .Token }}. MessageSent fires; then pass the code to VerifyEmailCode with PasswordReset, and set the new password with UpdateUser.
+
+![VerifyEmailCode](images/blocks/Supabase1-VerifyEmailCode.png)
+
+**VerifyEmailCode:** Signs in with a code sent by email. Type says which block sent it. SessionChanged fires when it succeeds.
+
+![VerifySmsCode](images/blocks/Supabase1-VerifySmsCode.png)
+
+**VerifySmsCode:** Signs in with a code sent by SendSmsCode. SessionChanged fires when it succeeds.
+
 ### Supabase: Events
 
 ![SignedUp](images/blocks/Supabase1-SignedUp.png)
@@ -407,6 +427,10 @@ Choices for blocks, properties and the keys of query and search dictionaries.
 ![ChannelStatus](images/blocks/helper-ChannelStatus.png)
 
 **ChannelStatus:** Subscribing, Subscribed, Unsubscribed
+
+![CodeType](images/blocks/helper-CodeType.png)
+
+**CodeType:** SignIn, PasswordReset
 
 ![FilterOperator](images/blocks/helper-FilterOperator.png)
 

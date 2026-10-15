@@ -24,8 +24,9 @@ storage and server code. All from blocks, and it works in the AI Companion.
 
 ## Features
 
-- **Accounts:** sign up and sign in with email and password, or anonymously. Users stay
-  signed in between app starts. Change the email, password or profile, and turn an
+- **Accounts:** sign up and sign in with email and password, with a code sent by email or
+  text message, or anonymously; reset forgotten passwords. Users stay signed in between
+  app starts. Change the email, password or profile, and turn an
   anonymous user into a full account.
 - **Database:** queries as dictionaries with dropdown keys, checked before they're sent:
   filters, ordering by several columns, pages with a total count. Insert, upsert, insert
