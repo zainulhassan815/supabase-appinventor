@@ -1,0 +1,55 @@
+(def (p$db method args types) (call-component-method 'SupabaseDatabase1 method args types))
+(def (p$filter column operator value) ((get-var p$db) 'Filter (*list-for-runtime* column operator value) '(text text any)))
+(def (p$any filters) ((get-var p$db) 'AnyOf (*list-for-runtime* filters) '(list)))
+(def (p$all filters) ((get-var p$db) 'AllOf (*list-for-runtime* filters) '(list)))
+(def (p$not filter) ((get-var p$db) 'Not (*list-for-runtime* filter) '(any)))
+(def (p$body operator value) ((get-var p$filter) "body" operator value))
+(def (p$query tag filters)
+  ((get-var p$db) 'Query
+    (*list-for-runtime* tag "notes" (make-yail-dictionary (make-dictionary-pair "columns" "body") (make-dictionary-pair "orderBy" "body") (make-dictionary-pair "filters" filters)))
+    '(text text dictionary)))
+(def (p$bodies rows) (coerce-to-string (map (lambda (row) (yail-dictionary-lookup "body" row "")) (yail-list->kawa-list rows))))
+
+(define-event Screen1 Initialize()(set-this-form)
+  (call-component-method 'Supabase1 'SignUp
+    (*list-for-runtime* (string-append "e2e" (number->string (java.lang.System:currentTimeMillis)) "@example.com") "secret123" (make-yail-dictionary))
+    '(text text dictionary)))
+
+(define-event Supabase1 SessionChanged($status $user)(set-this-form)
+  (when (yail-equal? (lexical-value $status) "SignedIn")
+    ((get-var p$db) 'Insert
+      (*list-for-runtime* "insert" "notes" (make-yail-list
+        (make-yail-dictionary (make-dictionary-pair "body" "apple")) (make-yail-dictionary (make-dictionary-pair "body" "banana"))
+        (make-yail-dictionary (make-dictionary-pair "body" "cherry")) (make-yail-dictionary (make-dictionary-pair "body" "date"))))
+      '(text text any))))
+
+(define-event SupabaseDatabase1 GotRows($tag $rows)(set-this-form)
+  (define tag (lexical-value $tag))
+  ((get-var p$report) (string-append tag " " ((get-var p$bodies) (lexical-value $rows))))
+  (cond
+    ((yail-equal? tag "insert")
+      ((get-var p$query) "any" (make-yail-list ((get-var p$any) (make-yail-list ((get-var p$body) "eq" "apple") ((get-var p$body) "eq" "date"))))))
+    ((yail-equal? tag "any")
+      ((get-var p$query) "not" (make-yail-list ((get-var p$not) ((get-var p$body) "in" (make-yail-list "apple" "banana"))))))
+    ((yail-equal? tag "not")
+      ((get-var p$query) "nested" (make-yail-list ((get-var p$any) (make-yail-list
+        ((get-var p$all) (make-yail-list ((get-var p$body) "like" "%a%") ((get-var p$body) "like" "%e%")))
+        ((get-var p$body) "eq" "cherry"))))))
+    ((yail-equal? tag "nested")
+      ((get-var p$query) "not any" (make-yail-list ((get-var p$not) ((get-var p$any) (make-yail-list ((get-var p$body) "eq" "apple") ((get-var p$body) "eq" "banana")))))))
+    ((yail-equal? tag "not any")
+      ((get-var p$query) "json" (call-component-method 'Mailpit 'JsonTextDecodeWithDictionaries
+        (*list-for-runtime* "[{\"anyOf\": [[\"body\", \"eq\", \"banana\"], {\"not\": [\"body\", \"like\", \"%a%\"]}]}]") '(text))))
+    ((yail-equal? tag "json")
+      ((get-var p$db) 'Count (*list-for-runtime* "count" "notes" (make-yail-list ((get-var p$any) (make-yail-list ((get-var p$body) "eq" "apple") ((get-var p$body) "eq" "cherry"))))) '(text text list)))
+    ((yail-equal? tag "delete")
+      ((get-var p$query) "empty" (make-yail-list ((get-var p$any) (make-yail-list))))
+      ((get-var p$query) "short" (make-yail-list ((get-var p$any) (make-yail-list (make-yail-list "body" "eq")))))
+      ((get-var p$query) "unknown" (make-yail-list (make-yail-dictionary (make-dictionary-pair "or" (make-yail-list))))))))
+
+(define-event SupabaseDatabase1 GotCount($tag $count)(set-this-form)
+  ((get-var p$report) (string-append "count " (coerce-to-string (lexical-value $count))))
+  ((get-var p$db) 'Delete (*list-for-runtime* "delete" "notes" (make-yail-list ((get-var p$not) ((get-var p$body) "eq" "banana")))) '(text text list)))
+
+(define-event SupabaseDatabase1 Error($tag $operation $code $message)(set-this-form)
+  ((get-var p$report) (string-append "error " (lexical-value $tag) " " (lexical-value $code) " " (lexical-value $message))))

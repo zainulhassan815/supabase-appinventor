@@ -126,7 +126,7 @@ class SupabaseChannel(container: ComponentContainer) : AndroidNonvisibleComponen
             requireUnsubscribed()
             val condition = (filter as? YailList)
                 ?.takeIf { it.size > 0 }
-                ?.let(Filters::parse)
+                ?.let { Filters.condition(it, "filter") }
             val kind = requireNotNull(ChangeEvent.fromUnderlyingValue(event)) { "Unknown change event $event" }
             val target: PostgresChangeFilter.() -> Unit = {
                 this.table = table

@@ -1,0 +1,11 @@
+insert \["apple", "banana", "cherry", "date"\]
+any \["apple", "date"\]
+not \["cherry", "date"\]
+nested \["apple", "cherry", "date"\]
+not any \["cherry", "date"\]
+json \["banana", "cherry"\]
+count 2
+delete \["apple", "cherry", "date"\]
+error empty invalid_argument query\.filters\[1\]\.anyOf must be a list of at least one filter\.
+error short invalid_argument query\.filters\[1\]\.anyOf\[1\]: Each filter is a list of column, operator and value\. Use the Filter block\.
+error unknown invalid_argument query\.filters\[1\]: "or" isn't anyOf, allOf or not\.

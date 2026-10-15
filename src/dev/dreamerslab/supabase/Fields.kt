@@ -44,10 +44,10 @@ internal class Fields<F : OptionList<String>>(value: Any?, private val path: Str
         return number.toInt()
     }
 
-    fun <T> list(field: F, read: (Any?) -> T): List<T> = when (val value = values[field]) {
+    fun <T> list(field: F, read: (item: Any?, path: String) -> T): List<T> = when (val value = values[field]) {
         null -> emptyList()
         is YailList -> value.toArray().mapIndexed { index, item ->
-            checked("${field.toUnderlyingValue()}[${index + 1}]") { read(item) }
+            read(item, "$path.${field.toUnderlyingValue()}[${index + 1}]")
         }
         else -> throw invalid(field, "a list")
     }

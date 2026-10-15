@@ -65,6 +65,17 @@ class SupabaseDatabase(container: ComponentContainer) : AndroidNonvisibleCompone
     fun Filter(column: String, @Options(FilterOperator::class) operator: String, value: Any): YailList =
         YailList.makeList(listOf(column, operator, value))
 
+    @SimpleFunction(description = "Makes a filter that matches when any of the filters in the list match. Use it " +
+        "wherever a filter goes, also inside AnyOf, AllOf and Not.")
+    fun AnyOf(filters: YailList): YailDictionary = filterGroup(Filters.ANY_OF, filters)
+
+    @SimpleFunction(description = "Makes a filter that matches when every filter in the list matches. Filters " +
+        "in a query already all have to match: use AllOf inside AnyOf or Not.")
+    fun AllOf(filters: YailList): YailDictionary = filterGroup(Filters.ALL_OF, filters)
+
+    @SimpleFunction(description = "Makes a filter that matches when the given filter doesn't.")
+    fun Not(filter: Any): YailDictionary = filterGroup(Filters.NOT, filter)
+
     @SimpleFunction(description = "Reads the rows of a table that match the query. Query is a dictionary " +
         "with QueryField keys, all optional: an empty dictionary reads every row. GotRows fires with the tag and " +
         "the rows, as a list of dictionaries.")
@@ -102,7 +113,7 @@ class SupabaseDatabase(container: ComponentContainer) : AndroidNonvisibleCompone
         limit: Int,
         offset: Int,
     ) = requests.launch("Select", tag) {
-        GotRows(tag, select(table, Selection(columns, filters.toArray().map(Filters::parse), orders(orderBy, ascending), limit, offset)))
+        GotRows(tag, select(table, Selection(columns, Filters.parseAll(filters, "filters"), orders(orderBy, ascending), limit, offset)))
     }
 
     @SimpleFunction(description = "Counts the rows of a table that match every filter. GotCount fires with the " +
@@ -199,6 +210,8 @@ class SupabaseDatabase(container: ComponentContainer) : AndroidNonvisibleCompone
 
     private fun reportError(operation: String, tag: String, code: String, message: String) =
         EventDispatcher.dispatchEvent(this, "Error", tag, operation, code, message)
+
+    private fun filterGroup(kind: String, filters: Any) = YailDictionary().apply { put(kind, filters) }
 
     private fun postgrest() = requireNotNull(supabase) { "Set the Client property to a Supabase component" }.client.postgrest
 
