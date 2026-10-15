@@ -169,7 +169,7 @@ a device against a local Supabase. See [Testing](docs/testing.md).
 app's code to yourself. If you change the extension's own files and distribute them,
 share those changes under the same license.
 
-Built with [Rush](https://github.com/zainulhassan815/rush-cli) on
+Built with [Rush](https://github.com/shreyashsaitwal/rush-cli) on
 [supabase-kt](https://github.com/supabase-community/supabase-kt). Supabase and MIT App
 Inventor are trademarks of their owners; this is a community project, not an official
 one.

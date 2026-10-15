@@ -9,7 +9,7 @@ them on a device or emulator against a local Supabase.
   `supabase start` in the repository: it seeds the database from
   `samples/live-notes/schema.sql` and `tests/e2e/schema.sql` (tables only the tests
   use), and serves the functions in `supabase/functions`.
-- A checkout of [rush-cli](https://github.com/zainulhassan815/rush-cli) next to this
+- A checkout of [rush-cli](https://github.com/shreyashsaitwal/rush-cli) next to this
   repository (or `RUSH_CLI`), whose `tool/e2e/buildserver.sh` builds App Inventor's
   build server once. Its blocks editor must also be built for the sample test:
   `ant -f blocklyeditor/build.xml BlocklyTestbed` in that App Inventor checkout.
