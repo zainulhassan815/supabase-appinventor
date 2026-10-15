@@ -1,0 +1,11 @@
+error SendEmailCode otp_disabled
+sent SendEmailCode
+code has 6 digits
+error VerifyEmailCode otp_expired
+signed in with an email code e2e\d+@example\.com
+sent ResetPassword
+code has 6 digits
+signed in with a reset code
+signed in with the new password
+sent SendSmsCode
+signed in with an sms code 15550100001

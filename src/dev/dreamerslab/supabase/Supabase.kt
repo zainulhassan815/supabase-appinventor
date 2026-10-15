@@ -17,6 +17,7 @@ import com.google.appinventor.components.runtime.OnDestroyListener
 import com.google.appinventor.components.runtime.ReplForm
 import com.google.appinventor.components.runtime.util.OnInitializeListener
 import com.google.appinventor.components.runtime.util.YailDictionary
+import dev.dreamerslab.supabase.helpers.CodeType
 import dev.dreamerslab.supabase.helpers.SessionStatus
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.Auth
@@ -24,6 +25,7 @@ import io.github.jan.supabase.auth.MemoryCodeVerifierCache
 import io.github.jan.supabase.auth.OtpType
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.providers.builtin.Email
+import io.github.jan.supabase.auth.providers.builtin.OTP
 import io.github.jan.supabase.auth.user.UserInfo
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.functions.Functions
@@ -146,6 +148,52 @@ class Supabase(container: ComponentContainer) : AndroidNonvisibleComponent(conta
     fun Reauthenticate() = requests.launch("Reauthenticate") {
         client.auth.reauthenticate()
         MessageSent("Reauthenticate")
+    }
+
+    @SimpleFunction(description = "Emails a sign-in code. CreateUser makes an account when there is none; " +
+        "otherwise an unknown email fails. The project's Magic link email template must show the code with " +
+        "{{ .Token }}. MessageSent fires; then pass the code to VerifyEmailCode.")
+    fun SendEmailCode(email: String, createUser: Boolean) = requests.launch("SendEmailCode") {
+        client.auth.signInWith(OTP) {
+            this.email = email
+            this.createUser = createUser
+        }
+        MessageSent("SendEmailCode")
+    }
+
+    @SimpleFunction(description = "Texts a sign-in code to a phone number in international format, such as " +
+        "+15551234567. The project needs an SMS provider. CreateUser makes an account when there is none. " +
+        "MessageSent fires; then pass the code to VerifySmsCode.")
+    fun SendSmsCode(phone: String, createUser: Boolean) = requests.launch("SendSmsCode") {
+        client.auth.signInWith(OTP) {
+            this.phone = phone
+            this.createUser = createUser
+        }
+        MessageSent("SendSmsCode")
+    }
+
+    @SimpleFunction(description = "Emails a code to reset the password. The project's Reset password email " +
+        "template must show the code with {{ .Token }}. MessageSent fires; then pass the code to " +
+        "VerifyEmailCode with PasswordReset, and set the new password with UpdateUser.")
+    fun ResetPassword(email: String) = requests.launch("ResetPassword") {
+        client.auth.resetPasswordForEmail(email, redirectUrl = null)
+        MessageSent("ResetPassword")
+    }
+
+    @SimpleFunction(description = "Signs in with a code sent by email. Type says which block sent it. " +
+        "SessionChanged fires when it succeeds.")
+    fun VerifyEmailCode(email: String, code: String, @Options(CodeType::class) type: String) =
+        requests.launch("VerifyEmailCode") {
+            val otpType = when (requireNotNull(CodeType.fromUnderlyingValue(type)) { "Unknown code type $type" }) {
+                CodeType.SignIn -> OtpType.Email.EMAIL
+                CodeType.PasswordReset -> OtpType.Email.RECOVERY
+            }
+            client.auth.verifyEmailOtp(otpType, email, code.trim())
+        }
+
+    @SimpleFunction(description = "Signs in with a code sent by SendSmsCode. SessionChanged fires when it succeeds.")
+    fun VerifySmsCode(phone: String, code: String) = requests.launch("VerifySmsCode") {
+        client.auth.verifyPhoneOtp(OtpType.Phone.SMS, phone, code.trim())
     }
 
     @SimpleEvent(description = "An account was created by SignUp.")
